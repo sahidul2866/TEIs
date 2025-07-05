@@ -1,0 +1,176 @@
+**MASTER PROMPT FOR AI ITEM–AUTHORING ENGINE**
+
+You are an AI item–authoring engine embedded in an Angular codebase.  Your job is to ensure that **all 14 SHSAT TEI interaction types** are fully implemented, conform to the SRS, and packaged as Angular components.  The project already has a `components/` folder containing some TEI components—use these if they exist, and **edit them** to meet the requirements below; for any missing TEI type, **create a new component** following the exact same pattern.
+
+---
+
+## 1. GLOBAL INSTRUCTIONS
+
+1. **Scan** components for existing components 
+2. **For each** existing component:
+   - **Update** its `@Input() itemData: TEIItemJSON` and `@Output() responseChange` signatures if needed.  
+   - **Verify** it reads an example demo JSON and renders per the UI spec.  
+   - **Ensure** full keyboard support, ARIA roles, styling, and SRS compliance.
+3. **For any missing** TEI type, **generate**:
+   - `xxx-item.component.ts`, `xxx-item.component.html`, and `xxx-item.component.scss` (or Tailwind classes).
+   - A demo JSON file `demo-xxx.json` in the same folder.
+   - A Jasmine/Karma spec `xxx-item.component.spec.ts`.
+
+4. **Consistency**:  
+   - All components must use the same Input/Output pattern:  
+     ```ts
+     @Input() itemData: TEIItemJSON;
+     @Output() responseChange = new EventEmitter<{ itemId: string; response: any; isCorrect: boolean }>();
+     ```  
+   - All styling must use the SHSAT brand palette via Tailwind utilities.  
+   - All code must be Angular 16 + TypeScript and lock‐safe in the lockdown browser.
+
+---
+
+## 2. TEI TYPE FUNCTIONALITY CHECKLIST
+
+For **each** TEI below, verify or implement:
+
+---
+
+### 1. Drag-and-Drop (`interactionType: "dragDrop"`)
+- **Behavior**: Drag labeled items into target slots; items snap into valid targets.
+- **Controls**: “Clear All” resets; “Submit” locks; practice: “Check Answer” highlights correct slots.
+- **Keyboard**: Tab to item, Space picks up, arrow keys move, Space drops.
+- **Accessibility**: `role="application"`, `aria-grabbed`, `aria-dropeffect`.
+
+---
+
+### 2. Equation Editor (`interactionType: "equationEditor"`)
+- **Behavior**: Click buttons (digits, operators, exponents) to build equations in a math-rendered input.
+- **Controls**: Undo, Redo, Delete, Clear, Submit.
+- **Keyboard**: Number keys and operators map; Tab through toolbar, Enter to activate.
+- **Accessibility**: ARIA labels on symbols.
+
+---
+
+### 3. Fill-in-the-Blank (`interactionType: "fillBlank"`)
+- **Behavior**: Text with inline `<input>` boxes; user types numeric or text answers.
+- **Controls**: Clear All, Submit, practice: instant correctness per box.
+- **Keyboard**: Standard input focus/tab order.
+- **Validation**: Trim whitespace; case-insensitive for text.
+
+---
+
+### 4. Hotspot (`interactionType: "hotspot"`)
+- **Behavior**: Clickable regions (SVG/image) defined by polygons; user selects N areas.
+- **Controls**: Submit, practice: outlines correct/incorrect hotspots.
+- **Keyboard**: Tab to region labels, Space to toggle.
+- **Accessibility**: Each region has `role="button"` and `aria-pressed`.
+
+---
+
+### 5. Hot Text (`interactionType: "hotText"`)
+- **Behavior**: Passage text with selectable words; user clicks words to select up to N.
+- **Controls**: Submit, practice: highlight correct/incorrect selections.
+- **Keyboard**: Arrow keys navigate words; Space selects.
+- **Accessibility**: `role="text"` and each word `role="button"`.
+
+---
+
+### 6. Inline Choice (`interactionType: "inlineChoice"`)
+- **Behavior**: Sentence with `<select>` dropdowns; each has options.
+- **Controls**: Submit, practice: correct options highlighted.
+- **Keyboard**: Native `<select>` behavior.
+- **Accessibility**: `<label>` associations.
+
+---
+
+### 7. Multiple Choice (`interactionType: "multipleChoice"`)
+- **Behavior**: Radio buttons list; single select.
+- **Controls**: Submit, practice: green check/red X next to choices.
+- **Keyboard**: Arrow keys cycle options.
+- **Accessibility**: `role="radiogroup"` and `role="radio"`.
+
+---
+
+### 8. Multiple Response (`interactionType: "multipleResponse"`)
+- **Behavior**: Checkbox list; user selects K answers.
+- **Controls**: Submit, practice: correct/incorrect icons.
+- **Keyboard**: Space toggles.
+- **Accessibility**: `role="group"` and `role="checkbox"`.
+
+---
+
+### 9. Point Graph (`interactionType: "pointGraph"`)
+- **Behavior**: Interactive coordinate grid; click to place/remove points.
+- **Controls**: Clear All, Submit, practice: show correct points.
+- **Keyboard**: Arrow keys move a cursor; Enter places.
+- **Accessibility**: `role="application"` on canvas, proper aria descriptions.
+
+---
+
+### 10. Reading Passage + Question (`interactionType: "readingPassage"`)
+- **Behavior**: Tab or toggle between “Video” and “Passage”; scrollable text, then MCQ below.
+- **Controls**: Submit, practice: highlight answer.
+- **Keyboard**: Tab into passage, arrow keys scroll.
+- **Accessibility**: Passage in `<article>` with `aria-label`.
+
+---
+
+### 11. Shape Transformation (`interactionType: "shapeTransformation"`)
+- **Behavior**: Drag shape thumbnails onto grid; reposition to match transformation.
+- **Controls**: Clear All, Submit, practice: overlay correct shape.
+- **Keyboard**: Tab through shapes, arrow keys move selected shape.
+- **Accessibility**: `role="application"`, aria-grabbed.
+
+---
+
+### 12. Solution Set (`interactionType: "solutionSet"`)
+- **Behavior**: Buttons to toggle graph elements (lines, regions); click “Solution Set” to show combined region.
+- **Controls**: Clear All, Submit, practice: show overlays.
+- **Keyboard**: Tab to buttons, Space toggles.
+- **Accessibility**: `role="button"` on each toggle.
+
+---
+
+### 13. Table Grid (`interactionType: "tableGrid"`)
+- **Behavior**: Checkbox matrix; user toggles boxes in rows×columns.
+- **Controls**: Clear All, Submit, practice: check/X overlay.
+- **Keyboard**: Arrow keys to navigate grid, Space toggles.
+- **Accessibility**: `role="grid"`, `role="row"`, `role="gridcell"`, `role="checkbox"`.
+
+---
+
+### 14. [Additional TEI] (`interactionType: "yourType"`)
+- **Behavior**: *Define as above…*  
+- **Controls**, **Keyboard**, **Accessibility** per the pattern.
+
+---
+
+## 3. OUTPUT FORMAT
+
+For **each** TEI type, your AI agent must emit:
+
+1. **`components/[tei]-item/demo-[tei].json`**  
+   - A small example SRS JSON.
+
+2. **`components/[tei]-item/[tei]-item.component.ts`**  
+   - Angular component class with `@Input() itemData` and `@Output() responseChange`.
+
+3. **`components/[tei]-item/[tei]-item.component.html`**  
+   - Template binding to `itemData.stimulus` and interactive controls.
+
+4. **`components/[tei]-item/[tei]-item.component.scss`**  
+   - Tailwind class references or utility-first CSS.
+
+5. **`components/[tei]-item/[tei]-item.component.spec.ts`**  
+   - Test skeleton for demo JSON, interaction, keyboard, and `responseChange`.
+
+6. **User Story & Scoring Rubric**  
+   - In comments at top of `.ts`:  
+     ```ts
+     /**
+      * User Story: As a student, I want to … so that I can …
+      * Scoring: 1 point per correct [part], no penalty for wrong, maxScore = X
+      */
+     ```
+
+---
+
+⚠️ **Do not** generate any other files or change global app routing.  **Only** edit existing TEI components or add missing ones under `components/`.  Follow naming conventions exactly and ensure **consistent** Input/Output signatures and **uniform** styling across all TEI types.  

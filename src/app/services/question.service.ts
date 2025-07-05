@@ -12,7 +12,7 @@ export class QuestionService {
     return [
       {
         id: 'q1',
-        type: 'drag-drop',
+        type: 'dragDrop',
         title: 'Classify Elements',
         instruction: 'Drag each element to the correct category',
         content: 'Classify the following elements as metals, non-metals, or metalloids.',
@@ -37,7 +37,7 @@ export class QuestionService {
       },
       {
         id: 'q2',
-        type: 'fill-blank',
+        type: 'fillBlank',
         title: 'Complete the Sentence',
         instruction: 'Fill in the blanks with the correct words',
         content: 'The process of photosynthesis converts _____ and _____ into glucose and oxygen using _____.',
@@ -51,7 +51,7 @@ export class QuestionService {
       },
       {
         id: 'q3',
-        type: 'hot-spot',
+        type: 'hotspot',
         title: 'Identify Cell Parts',
         instruction: 'Click on the nucleus of the cell',
         content: 'Look at the diagram of a plant cell and identify the nucleus.',
@@ -65,7 +65,7 @@ export class QuestionService {
       },
       {
         id: 'q4',
-        type: 'equation-editor',
+        type: 'equationEditor',
         title: 'Solve for X',
         instruction: 'Create an equation to solve for x',
         content: 'If 3x + 5 = 17, write the equation to solve for x.',
@@ -79,7 +79,7 @@ export class QuestionService {
       },
       {
         id: 'q5',
-        type: 'hot-text',
+        type: 'hotText',
         title: 'Select Adjectives',
         instruction: 'Select all the adjectives in the sentence',
         content: 'The quick brown fox jumps over the lazy dog.',
@@ -99,7 +99,7 @@ export class QuestionService {
       },
       {
         id: 'q6',
-        type: 'multiple-choice',
+        type: 'multipleChoice',
         title: 'Capital of France',
         instruction: 'Select the correct answer',
         content: 'What is the capital of France?',
@@ -109,7 +109,7 @@ export class QuestionService {
       },
       {
         id: 'q7',
-        type: 'multiple-response',
+        type: 'multipleResponse',
         title: 'Prime Numbers',
         instruction: 'Select all prime numbers',
         content: 'Which of the following numbers are prime?',
@@ -119,7 +119,7 @@ export class QuestionService {
       },
       {
         id: 'q8',
-        type: 'inline-choice',
+        type: 'inlineChoice',
         title: 'Complete the Passage',
         instruction: 'Choose the correct word for each blank',
         content: 'The scientific method involves making observations, forming a [hypothesis/theory/law], and conducting [experiments/surveys/interviews] to test it.',
@@ -132,7 +132,7 @@ export class QuestionService {
       },
       {
         id: 'q9',
-        type: 'table-grid',
+        type: 'tableGrid',
         title: 'Select Correct Cells',
         instruction: 'Select the cells that represent prime numbers',
         content: 'In the grid below, select all cells containing prime numbers.',
@@ -170,7 +170,7 @@ export class QuestionService {
       },
       {
         id: 'q10',
-        type: 'point-graph',
+        type: 'pointGraph',
         title: 'Plot the Points',
         instruction: 'Plot the points that satisfy y = 2x + 1',
         content: 'On the coordinate plane, plot three points that lie on the line y = 2x + 1.',
@@ -191,7 +191,7 @@ export class QuestionService {
       },
       {
         id: 'q11',
-        type: 'shape-transform',
+        type: 'shapeTransformation',
         title: 'Transform the Shape',
         instruction: 'Apply a 90-degree clockwise rotation to the triangle',
         content: 'Rotate the given triangle 90 degrees clockwise about the origin.',
@@ -211,7 +211,7 @@ export class QuestionService {
       },
       {
         id: 'q12',
-        type: 'solution-set',
+        type: 'solutionSet',
         title: 'Find Solution Set',
         instruction: 'Determine the solution set for the inequality',
         content: 'Find the solution set for the inequality: 2x + 3 > 7',

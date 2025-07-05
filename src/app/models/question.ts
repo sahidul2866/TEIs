@@ -1,3 +1,35 @@
+export interface TEIItemJSON {
+  itemId: string;
+  interactionType: TEIType;
+  title: string;
+  stimulus: string;
+  instructions: string;
+  options?: string[];
+  correctAnswer?: any;
+  points: number;
+  timeLimit?: number;
+  metadata?: {
+    subject?: string;
+    difficulty?: 'easy' | 'medium' | 'hard';
+    topic?: string;
+  };
+  // Specific fields for different TEI types
+  dragItems?: DragItem[];
+  dropZones?: DropZone[];
+  blanks?: BlankField[];
+  hotSpots?: HotSpot[];
+  hotTexts?: HotText[];
+  gridData?: GridCell[][];
+  graphData?: GraphData;
+  shapeData?: ShapeData;
+  equationData?: EquationData;
+  choiceData?: ChoiceData[];
+  tableData?: TableData;
+  solutionData?: SolutionData;
+  passageData?: PassageData;
+}
+
+// Legacy interface for backward compatibility
 export interface Question {
   id: string;
   type: TEIType;
@@ -26,21 +58,28 @@ export interface Question {
   choiceData?: ChoiceData[];
   tableData?: TableData;
   solutionData?: SolutionData;
+  passageData?: PassageData;
+  // New fields for compatibility
+  itemId?: string;
+  interactionType?: TEIType;
+  stimulus?: string;
+  instructions?: string;
 }
 
 export type TEIType = 
-  | 'drag-drop' 
-  | 'fill-blank' 
-  | 'hot-spot' 
-  | 'equation-editor' 
-  | 'hot-text' 
-  | 'multiple-choice' 
-  | 'multiple-response' 
-  | 'inline-choice' 
-  | 'table-grid' 
-  | 'point-graph' 
-  | 'shape-transform' 
-  | 'solution-set';
+  | 'dragDrop' 
+  | 'fillBlank' 
+  | 'hotspot' 
+  | 'equationEditor' 
+  | 'hotText' 
+  | 'multipleChoice' 
+  | 'multipleResponse' 
+  | 'inlineChoice' 
+  | 'tableGrid' 
+  | 'pointGraph' 
+  | 'shapeTransformation' 
+  | 'solutionSet'
+  | 'readingPassage';
 
 export interface DragItem {
   id: string;
@@ -135,6 +174,18 @@ export interface SolutionData {
   equation: string;
   solutionSet: number[] | string[];
   inequalities?: string[];
+}
+
+export interface PassageData {
+  passage: string;
+  videoUrl?: string;
+  hasVideo: boolean;
+  hasText: boolean;
+  question: {
+    text: string;
+    options: string[];
+    correctAnswer: number;
+  };
 }
 
 export interface UserAnswer {
