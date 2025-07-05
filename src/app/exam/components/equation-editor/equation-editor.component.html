@@ -1,105 +1,388 @@
-<div class="equation-editor-container">
-  <!-- Equation Display -->
-  <div class="equation-display mb-6">
-    <label class="block text-sm font-medium text-gray-700 mb-2">Your Equation:</label>
-    <div class="relative">
-      <input
-        type="text"
+<div class="equation-editor-container space-y-8">
+  <!-- Instructions Panel -->
+  <div class="instructions-panel bg-gradient-to-r from-purple-50 to-indigo-50 p-6 rounded-2xl border border-purple-200">
+    <div class="flex items-center space-x-3 mb-3">
+      <div class="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center">
+        <i class="fas fa-calculator text-white"></i>
+      </div>
+      <h3 class="text-lg font-semibold text-purple-900">Equation Editor</h3>
+    </div>
+    <p class="text-purple-800 leading-relaxed">
+      Build your mathematical equation using the symbol palette below or type directly in the input field. 
+      Click symbols to insert them at the cursor position.
+    </p>
+  </div>
+
+  <!-- Main Equation Input -->
+  <div class="equation-input-section">
+    <div class="section-header mb-6">
+      <h3 class="text-xl font-bold text-gray-900 mb-2 flex items-center">
+        <i class="fas fa-edit text-purple-500 mr-3"></i>
+        Your Equation
+      </h3>
+      <div class="w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
+    </div>
+
+    <div class="equation-input-wrapper relative">
+      <textarea
         [(ngModel)]="currentEquation"
         (input)="onDirectInput($event)"
         (click)="onCursorChange($event)"
         (keyup)="onCursorChange($event)"
-        class="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors font-mono"
-        placeholder="Enter your equation here..."
-        readonly="false">
-      <div class="absolute top-2 right-2 text-sm text-gray-500">
+        (keydown)="onKeyDown($event)"
+        (focus)="onInputFocus()"
+        (blur)="onInputBlur()"
+        class="equation-input"
+        placeholder="Enter your equation here... (e.g., x² + 2x - 3 = 0)"
+        [attr.aria-label]="'Equation input field. Current equation: ' + (currentEquation || 'empty')"
+        [attr.aria-describedby]="'equation-help cursor-position'"
+        rows="3"
+        spellcheck="false"
+        autocomplete="off">
+      </textarea>
+      
+      <!-- Cursor Position Indicator -->
+      <div id="cursor-position" class="absolute top-3 right-3 text-sm text-gray-500 bg-white px-2 py-1 rounded-md border">
         Position: {{ cursorPosition }}
+      </div>
+      
+      <!-- Character Count -->
+      <div class="absolute bottom-3 right-3 text-xs text-gray-400">
+        {{ currentEquation.length }} characters
+      </div>
+    </div>
+
+    <!-- Equation Preview -->
+    <div class="equation-preview mt-4 p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200">
+      <h4 class="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+        <i class="fas fa-eye text-gray-500 mr-2"></i>
+        Live Preview
+      </h4>
+      <div class="preview-content bg-white p-4 rounded-lg border min-h-16 flex items-center justify-center">
+        <div class="text-2xl font-mono text-center" [class.text-gray-400]="!currentEquation">
+          {{ currentEquation || 'No equation entered' }}
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Button Panels -->
-  <div class="button-panels grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-    <!-- Numbers -->
-    <div class="panel">
-      <h3 class="text-lg font-semibold text-gray-800 mb-3">Numbers</h3>
-      <div class="grid grid-cols-3 gap-2">
-        <button 
-          *ngFor="let number of getNumberButtons()"
-          (click)="insertNumber(number)"
-          class="btn btn-number">
-          {{ number }}
-        </button>
-      </div>
+  <!-- Symbol Palette -->
+  <div class="symbol-palette-section">
+    <div class="section-header mb-6">
+      <h3 class="text-xl font-bold text-gray-900 mb-2 flex items-center">
+        <i class="fas fa-th text-indigo-500 mr-3"></i>
+        Symbol Palette
+      </h3>
+      <div class="w-full h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"></div>
     </div>
 
-    <!-- Variables -->
-    <div class="panel">
-      <h3 class="text-lg font-semibold text-gray-800 mb-3">Variables</h3>
-      <div class="grid grid-cols-2 gap-2">
-        <button 
-          *ngFor="let variable of variables"
-          (click)="insertVariable(variable)"
-          class="btn btn-variable">
-          {{ variable }}
-        </button>
+    <!-- Symbol Categories -->
+    <div class="symbol-categories space-y-6">
+      <!-- Numbers -->
+      <div class="symbol-category">
+        <h4 class="category-title">
+          <i class="fas fa-hashtag text-blue-500 mr-2"></i>
+          Numbers
+        </h4>
+        <div class="symbol-grid">
+          <button 
+            *ngFor="let number of getNumberButtons()"
+            (click)="insertNumber(number)"
+            (keydown.enter)="insertNumber(number)"
+            (keydown.space)="insertNumber(number)"
+            class="symbol-btn number-btn"
+            [attr.aria-label]="'Insert number ' + number"
+            type="button">
+            {{ number }}
+          </button>
+          <button 
+            (click)="insertSymbol('.')"
+            class="symbol-btn number-btn"
+            aria-label="Insert decimal point"
+            type="button">
+            .
+          </button>
+        </div>
       </div>
-    </div>
 
-    <!-- Operators -->
-    <div class="panel">
-      <h3 class="text-lg font-semibold text-gray-800 mb-3">Operators</h3>
-      <div class="grid grid-cols-2 gap-2">
-        <button 
-          *ngFor="let operator of operators"
-          (click)="insertOperator(operator)"
-          class="btn btn-operator">
-          {{ operator }}
-        </button>
+      <!-- Variables -->
+      <div class="symbol-category">
+        <h4 class="category-title">
+          <i class="fas fa-italic text-green-500 mr-2"></i>
+          Variables
+        </h4>
+        <div class="symbol-grid">
+          <button 
+            *ngFor="let variable of variables"
+            (click)="insertVariable(variable)"
+            (keydown.enter)="insertVariable(variable)"
+            (keydown.space)="insertVariable(variable)"
+            class="symbol-btn variable-btn"
+            [attr.aria-label]="'Insert variable ' + variable"
+            type="button">
+            {{ variable }}
+          </button>
+        </div>
       </div>
-    </div>
 
-    <!-- Functions & Parentheses -->
-    <div class="panel">
-      <h3 class="text-lg font-semibold text-gray-800 mb-3">Functions</h3>
-      <div class="grid grid-cols-2 gap-2">
-        <button (click)="insertParenthesis('(')" class="btn btn-function">(</button>
-        <button (click)="insertParenthesis(')')" class="btn btn-function">)</button>
-        <button (click)="insertFunction('sin')" class="btn btn-function">sin</button>
-        <button (click)="insertFunction('cos')" class="btn btn-function">cos</button>
-        <button (click)="insertFunction('log')" class="btn btn-function">log</button>
-        <button (click)="insertFunction('sqrt')" class="btn btn-function">√</button>
+      <!-- Basic Operators -->
+      <div class="symbol-category">
+        <h4 class="category-title">
+          <i class="fas fa-plus text-red-500 mr-2"></i>
+          Basic Operators
+        </h4>
+        <div class="symbol-grid">
+          <button 
+            *ngFor="let operator of operators"
+            (click)="insertOperator(operator)"
+            (keydown.enter)="insertOperator(operator)"
+            (keydown.space)="insertOperator(operator)"
+            class="symbol-btn operator-btn"
+            [attr.aria-label]="'Insert operator ' + getOperatorName(operator)"
+            type="button">
+            {{ operator }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Advanced Functions -->
+      <div class="symbol-category">
+        <h4 class="category-title">
+          <i class="fas fa-function text-purple-500 mr-2"></i>
+          Functions & Symbols
+        </h4>
+        <div class="symbol-grid">
+          <button 
+            (click)="insertParenthesis('(')"
+            class="symbol-btn function-btn"
+            aria-label="Insert opening parenthesis"
+            type="button">
+            (
+          </button>
+          <button 
+            (click)="insertParenthesis(')')"
+            class="symbol-btn function-btn"
+            aria-label="Insert closing parenthesis"
+            type="button">
+            )
+          </button>
+          <button 
+            (click)="insertFunction('sin')"
+            class="symbol-btn function-btn"
+            aria-label="Insert sine function"
+            type="button">
+            sin
+          </button>
+          <button 
+            (click)="insertFunction('cos')"
+            class="symbol-btn function-btn"
+            aria-label="Insert cosine function"
+            type="button">
+            cos
+          </button>
+          <button 
+            (click)="insertFunction('tan')"
+            class="symbol-btn function-btn"
+            aria-label="Insert tangent function"
+            type="button">
+            tan
+          </button>
+          <button 
+            (click)="insertFunction('log')"
+            class="symbol-btn function-btn"
+            aria-label="Insert logarithm function"
+            type="button">
+            log
+          </button>
+          <button 
+            (click)="insertFunction('ln')"
+            class="symbol-btn function-btn"
+            aria-label="Insert natural logarithm function"
+            type="button">
+            ln
+          </button>
+          <button 
+            (click)="insertSymbol('√')"
+            class="symbol-btn function-btn"
+            aria-label="Insert square root symbol"
+            type="button">
+            √
+          </button>
+          <button 
+            (click)="insertSymbol('π')"
+            class="symbol-btn function-btn"
+            aria-label="Insert pi symbol"
+            type="button">
+            π
+          </button>
+          <button 
+            (click)="insertSymbol('∞')"
+            class="symbol-btn function-btn"
+            aria-label="Insert infinity symbol"
+            type="button">
+            ∞
+          </button>
+          <button 
+            (click)="insertSymbol('²')"
+            class="symbol-btn function-btn"
+            aria-label="Insert superscript 2"
+            type="button">
+            x²
+          </button>
+          <button 
+            (click)="insertSymbol('³')"
+            class="symbol-btn function-btn"
+            aria-label="Insert superscript 3"
+            type="button">
+            x³
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Control Buttons -->
-  <div class="control-buttons flex justify-center space-x-4 mt-6">
-    <button 
-      (click)="backspace()"
-      class="btn btn-control bg-yellow-500 hover:bg-yellow-600 text-white">
-      <i class="fas fa-backspace mr-2"></i>
-      Backspace
-    </button>
-    <button 
-      (click)="clearEquation()"
-      class="btn btn-control bg-red-500 hover:bg-red-600 text-white">
-      <i class="fas fa-trash mr-2"></i>
-      Clear
-    </button>
-  </div>
+  <div class="control-section">
+    <div class="section-header mb-6">
+      <h3 class="text-xl font-bold text-gray-900 mb-2 flex items-center">
+        <i class="fas fa-tools text-orange-500 mr-3"></i>
+        Controls
+      </h3>
+      <div class="w-full h-1 bg-gradient-to-r from-orange-500 to-red-500 rounded-full"></div>
+    </div>
 
-  <!-- Preview -->
-  <div class="equation-preview mt-6 p-4 bg-gray-50 rounded-lg">
-    <h3 class="text-lg font-semibold text-gray-800 mb-2">Preview:</h3>
-    <div class="text-2xl font-mono text-center py-4 bg-white rounded border">
-      {{ currentEquation || 'No equation entered' }}
+    <div class="control-buttons flex flex-wrap gap-4 justify-center">
+      <button 
+        (click)="backspace()"
+        (keydown.enter)="backspace()"
+        (keydown.space)="backspace()"
+        class="control-btn backspace-btn"
+        [disabled]="currentEquation.length === 0"
+        aria-label="Delete last character"
+        type="button">
+        <i class="fas fa-backspace mr-2"></i>
+        Backspace
+      </button>
+      
+      <button 
+        (click)="clearEquation()"
+        (keydown.enter)="clearEquation()"
+        (keydown.space)="clearEquation()"
+        class="control-btn clear-btn"
+        [disabled]="currentEquation.length === 0"
+        aria-label="Clear entire equation"
+        type="button">
+        <i class="fas fa-trash mr-2"></i>
+        Clear All
+      </button>
+      
+      <button 
+        (click)="undoLastAction()"
+        (keydown.enter)="undoLastAction()"
+        (keydown.space)="undoLastAction()"
+        class="control-btn undo-btn"
+        [disabled]="!canUndo()"
+        aria-label="Undo last action"
+        type="button">
+        <i class="fas fa-undo mr-2"></i>
+        Undo
+      </button>
+      
+      <button 
+        (click)="redoLastAction()"
+        (keydown.enter)="redoLastAction()"
+        (keydown.space)="redoLastAction()"
+        class="control-btn redo-btn"
+        [disabled]="!canRedo()"
+        aria-label="Redo last action"
+        type="button">
+        <i class="fas fa-redo mr-2"></i>
+        Redo
+      </button>
     </div>
   </div>
 
-  <!-- Instructions -->
-  <div class="instructions bg-purple-50 p-4 rounded-lg mt-6">
-    <i class="fas fa-calculator text-purple-600 mr-2"></i>
-    <span class="text-purple-800">Use the buttons above to build your equation, or type directly in the input field.</span>
+  <!-- Equation Validation -->
+  <div class="validation-section" *ngIf="currentEquation">
+    <div class="validation-panel p-6 rounded-2xl border" 
+         [class.bg-green-50]="isValidEquation()"
+         [class.border-green-200]="isValidEquation()"
+         [class.bg-red-50]="!isValidEquation()"
+         [class.border-red-200]="!isValidEquation()">
+      <div class="flex items-center space-x-3 mb-3">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+             [class.bg-green-500]="isValidEquation()"
+             [class.bg-red-500]="!isValidEquation()">
+          <i class="fas text-white text-sm"
+             [class.fa-check]="isValidEquation()"
+             [class.fa-exclamation-triangle]="!isValidEquation()"></i>
+        </div>
+        <h4 class="font-semibold"
+            [class.text-green-800]="isValidEquation()"
+            [class.text-red-800]="!isValidEquation()">
+          {{ isValidEquation() ? 'Valid Equation' : 'Equation Issues' }}
+        </h4>
+      </div>
+      
+      <div class="validation-messages space-y-2">
+        <p *ngIf="isValidEquation()" class="text-green-700">
+          Your equation appears to be properly formatted.
+        </p>
+        <div *ngIf="!isValidEquation()" class="text-red-700 space-y-1">
+          <p *ngFor="let error of getValidationErrors()" class="text-sm">
+            • {{ error }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Keyboard Shortcuts Help -->
+  <div class="keyboard-help bg-gray-50 p-4 rounded-xl border border-gray-200">
+    <details class="group">
+      <summary class="cursor-pointer flex items-center justify-between font-medium text-gray-700 hover:text-gray-900">
+        <span class="flex items-center">
+          <i class="fas fa-keyboard text-gray-500 mr-2"></i>
+          Keyboard Shortcuts
+        </span>
+        <i class="fas fa-chevron-down group-open:rotate-180 transition-transform"></i>
+      </summary>
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span>Clear equation:</span>
+            <kbd class="kbd">Ctrl + A, Delete</kbd>
+          </div>
+          <div class="flex items-center justify-between">
+            <span>Undo:</span>
+            <kbd class="kbd">Ctrl + Z</kbd>
+          </div>
+          <div class="flex items-center justify-between">
+            <span>Redo:</span>
+            <kbd class="kbd">Ctrl + Y</kbd>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span>Move cursor:</span>
+            <kbd class="kbd">Arrow Keys</kbd>
+          </div>
+          <div class="flex items-center justify-between">
+            <span>Select all:</span>
+            <kbd class="kbd">Ctrl + A</kbd>
+          </div>
+          <div class="flex items-center justify-between">
+            <span>Copy/Paste:</span>
+            <kbd class="kbd">Ctrl + C/V</kbd>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- Hidden help text for screen readers -->
+  <div id="equation-help" class="sr-only">
+    Equation editor. Use the symbol palette buttons to insert mathematical symbols, 
+    or type directly in the input field. The equation will be validated in real-time.
   </div>
 </div>

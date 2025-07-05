@@ -1,43 +1,207 @@
-<div class="multiple-choice-container">
-  <!-- Options -->
-  <div class="options-list space-y-3">
-    <div 
-      *ngFor="let option of question.options; let i = index"
-      class="option-item"
-      [class.selected]="isSelected(i)"
-      (click)="onOptionSelect(i)">
-      
-      <div class="option-content flex items-center space-x-3">
-        <div class="option-indicator">
-          <div class="radio-button" [class.checked]="isSelected(i)">
-            <div class="radio-inner" [class.visible]="isSelected(i)"></div>
+<div class="multiple-choice-container space-y-6">
+  <!-- Instructions Panel -->
+  <div class="instructions-panel bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-200">
+    <div class="flex items-center space-x-3 mb-3">
+      <div class="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center">
+        <i class="fas fa-check-circle text-white"></i>
+      </div>
+      <h3 class="text-lg font-semibold text-green-900">Multiple Choice</h3>
+    </div>
+    <p class="text-green-800 leading-relaxed">
+      Select the single best answer from the options below. Only one option can be selected at a time.
+    </p>
+  </div>
+
+  <!-- Options List -->
+  <div class="options-section">
+    <div class="section-header mb-6">
+      <h3 class="text-xl font-bold text-gray-900 mb-2 flex items-center">
+        <i class="fas fa-list text-blue-500 mr-3"></i>
+        Answer Options
+      </h3>
+      <div class="w-full h-1 bg-gradient-to-r from-blue-500 to-green-500 rounded-full"></div>
+    </div>
+
+    <div class="options-list space-y-4" role="radiogroup" [attr.aria-label]="'Answer options for: ' + question.content">
+      <div 
+        *ngFor="let option of question.options; let i = index; trackBy: trackByIndex"
+        class="option-item group"
+        [class.selected]="isSelected(i)"
+        (click)="onOptionSelect(i)"
+        (keydown)="onKeyDown($event, i)"
+        tabindex="0"
+        role="radio"
+        [attr.aria-checked]="isSelected(i)"
+        [attr.aria-label]="getOptionLetter(i) + '. ' + option"
+        [attr.aria-describedby]="'option-help-' + i">
+        
+        <div class="option-content">
+          <!-- Radio Button Indicator -->
+          <div class="option-indicator">
+            <div class="radio-button" [class.checked]="isSelected(i)">
+              <div class="radio-inner" [class.visible]="isSelected(i)">
+                <i class="fas fa-check text-xs"></i>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Option Label and Text -->
+          <div class="option-label flex-1">
+            <div class="flex items-start space-x-3">
+              <span class="option-letter">{{ getOptionLetter(i) }}.</span>
+              <span class="option-text">{{ option }}</span>
+            </div>
+          </div>
+          
+          <!-- Selection Indicator -->
+          <div class="selection-indicator opacity-0 group-hover:opacity-100 transition-opacity"
+               [class.opacity-100]="isSelected(i)">
+            <i class="fas fa-arrow-right text-blue-500" *ngIf="!isSelected(i)"></i>
+            <i class="fas fa-check-circle text-green-500" *ngIf="isSelected(i)"></i>
           </div>
         </div>
         
-        <div class="option-label flex-1">
-          <span class="option-letter">{{ getOptionLetter(i) }}.</span>
-          <span class="option-text">{{ option }}</span>
+        <!-- Accessibility helper text -->
+        <div [id]="'option-help-' + i" class="sr-only">
+          Option {{ getOptionLetter(i) }}. {{ isSelected(i) ? 'Currently selected.' : 'Not selected.' }}
+          Press space or enter to select this option.
         </div>
       </div>
     </div>
   </div>
 
   <!-- Selection Summary -->
-  <div class="selection-summary mt-6 p-4 bg-gray-50 rounded-lg">
-    <h3 class="text-lg font-semibold text-gray-800 mb-2">Your Selection:</h3>
-    <div *ngIf="userAnswer !== null" class="selected-option">
-      <span class="font-medium text-blue-600">
-        {{ getOptionLetter(userAnswer) }}. {{ question.options![userAnswer] }}
-      </span>
+  <div class="selection-summary bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+    <div class="summary-header flex items-center justify-between mb-4">
+      <h4 class="font-semibold text-gray-800 flex items-center">
+        <i class="fas fa-clipboard-check text-blue-500 mr-2"></i>
+        Your Selection
+      </h4>
+      <div class="selection-status">
+        <span class="status-badge" 
+              [class.bg-green-100]="userAnswer !== null"
+              [class.text-green-800]="userAnswer !== null"
+              [class.bg-gray-100]="userAnswer === null"
+              [class.text-gray-600]="userAnswer === null">
+          {{ userAnswer !== null ? 'Selected' : 'No Selection' }}
+        </span>
+      </div>
     </div>
-    <div *ngIf="userAnswer === null" class="no-selection text-gray-500 italic">
-      No option selected
+    
+    <div class="summary-content">
+      <div *ngIf="userAnswer !== null" class="selected-option bg-blue-50 p-4 rounded-xl border border-blue-200">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+            <span class="text-white font-bold text-sm">{{ getOptionLetter(userAnswer) }}</span>
+          </div>
+          <div class="flex-1">
+            <div class="font-medium text-blue-900">Option {{ getOptionLetter(userAnswer) }}</div>
+            <div class="text-blue-700 mt-1">{{ question.options![userAnswer] }}</div>
+          </div>
+          <button 
+            (click)="clearSelection()"
+            (keydown.enter)="clearSelection()"
+            (keydown.space)="clearSelection()"
+            class="clear-btn"
+            aria-label="Clear selection"
+            type="button">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div *ngIf="userAnswer === null" class="no-selection text-center py-8">
+        <i class="fas fa-hand-pointer text-gray-300 text-4xl mb-3"></i>
+        <p class="text-gray-500 font-medium">No option selected</p>
+        <p class="text-gray-400 text-sm mt-1">Click on an option above to make your selection</p>
+      </div>
     </div>
   </div>
 
-  <!-- Instructions -->
-  <div class="instructions bg-blue-50 p-4 rounded-lg mt-6">
-    <i class="fas fa-check-circle text-blue-600 mr-2"></i>
-    <span class="text-blue-800">Select the best answer from the options above.</span>
+  <!-- Progress Indicator -->
+  <div class="progress-section bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-2xl border border-blue-200">
+    <div class="flex items-center justify-between mb-4">
+      <h4 class="font-semibold text-gray-800 flex items-center">
+        <i class="fas fa-tasks text-green-500 mr-2"></i>
+        Question Progress
+      </h4>
+      <span class="text-sm text-gray-600">
+        {{ userAnswer !== null ? 'Complete' : 'Incomplete' }}
+      </span>
+    </div>
+    
+    <div class="progress">
+      <div 
+        class="progress-bar"
+        [style.width.%]="getProgressPercentage()"
+        role="progressbar"
+        [attr.aria-valuenow]="getProgressPercentage()"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        [attr.aria-label]="'Question progress: ' + getProgressPercentage() + '% complete'">
+      </div>
+    </div>
+    
+    <div class="mt-2 text-xs text-gray-500">
+      {{ getProgressPercentage() }}% Complete
+    </div>
+  </div>
+
+  <!-- Keyboard Instructions -->
+  <div class="keyboard-help bg-gray-50 p-4 rounded-xl border border-gray-200">
+    <details class="group">
+      <summary class="cursor-pointer flex items-center justify-between font-medium text-gray-700 hover:text-gray-900">
+        <span class="flex items-center">
+          <i class="fas fa-keyboard text-gray-500 mr-2"></i>
+          Keyboard Instructions
+        </span>
+        <i class="fas fa-chevron-down group-open:rotate-180 transition-transform"></i>
+      </summary>
+      <div class="mt-4 space-y-2 text-sm text-gray-600">
+        <div class="flex items-center space-x-3">
+          <kbd class="px-2 py-1 bg-white border border-gray-300 rounded text-xs">Space/Enter</kbd>
+          <span>Select the focused option</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <kbd class="px-2 py-1 bg-white border border-gray-300 rounded text-xs">Arrow Keys</kbd>
+          <span>Navigate between options</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <kbd class="px-2 py-1 bg-white border border-gray-300 rounded text-xs">1-{{ question.options?.length || 0 }}</kbd>
+          <span>Select option by number</span>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- Answer Confidence (Optional Enhancement) -->
+  <div class="confidence-section bg-yellow-50 p-6 rounded-2xl border border-yellow-200" *ngIf="userAnswer !== null">
+    <h4 class="font-semibold text-yellow-800 mb-4 flex items-center">
+      <i class="fas fa-star text-yellow-600 mr-2"></i>
+      Confidence Level (Optional)
+    </h4>
+    <div class="confidence-slider">
+      <label for="confidence" class="block text-sm text-yellow-700 mb-2">
+        How confident are you in your answer?
+      </label>
+      <input 
+        type="range" 
+        id="confidence" 
+        min="1" 
+        max="5" 
+        [(ngModel)]="confidenceLevel"
+        (change)="onConfidenceChange()"
+        class="w-full h-2 bg-yellow-200 rounded-lg appearance-none cursor-pointer slider"
+        aria-label="Confidence level from 1 to 5">
+      <div class="flex justify-between text-xs text-yellow-600 mt-2">
+        <span>Not Confident</span>
+        <span>Very Confident</span>
+      </div>
+      <div class="text-center mt-2">
+        <span class="confidence-value bg-yellow-200 px-3 py-1 rounded-full text-yellow-800 font-medium">
+          {{ getConfidenceText() }}
+        </span>
+      </div>
+    </div>
   </div>
 </div>
