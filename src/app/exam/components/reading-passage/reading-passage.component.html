@@ -1,0 +1,141 @@
+<div class="reading-passage-container" role="application" aria-label="Reading passage with comprehension question">
+  <!-- Stimulus -->
+  <div class="stimulus mb-4">
+    <h2 class="text-xl font-semibold text-gray-800 mb-2">{{ itemData.title }}</h2>
+    <p class="text-gray-600 mb-4" [innerHTML]="itemData.stimulus"></p>
+  </div>
+
+  <!-- Instructions -->
+  <div class="instructions mb-4">
+    <p class="text-sm text-gray-700 font-medium" [innerHTML]="itemData.instructions"></p>
+  </div>
+
+  <!-- Tab Navigation (if both video and text are available) -->
+  <div *ngIf="hasVideo() && hasText()" class="tab-navigation mb-4" role="tablist">
+    <button 
+      class="tab-btn"
+      [class.active]="activeTab === 'video'"
+      role="tab"
+      [attr.aria-selected]="activeTab === 'video'"
+      [attr.aria-controls]="'video-panel'"
+      (click)="selectTab('video')"
+      (keydown.enter)="selectTab('video')"
+      (keydown.space)="selectTab('video')">
+      <i class="fas fa-play mr-2" aria-hidden="true"></i>
+      Video
+    </button>
+    <button 
+      class="tab-btn"
+      [class.active]="activeTab === 'passage'"
+      role="tab"
+      [attr.aria-selected]="activeTab === 'passage'"
+      [attr.aria-controls]="'passage-panel'"
+      (click)="selectTab('passage')"
+      (keydown.enter)="selectTab('passage')"
+      (keydown.space)="selectTab('passage')">
+      <i class="fas fa-book-open mr-2" aria-hidden="true"></i>
+      Passage
+    </button>
+  </div>
+
+  <!-- Video Panel -->
+  <div 
+    *ngIf="hasVideo() && activeTab === 'video'" 
+    id="video-panel"
+    class="video-panel mb-6"
+    role="tabpanel"
+    aria-labelledby="video-tab">
+    <div class="video-container bg-black rounded-lg overflow-hidden">
+      <video 
+        *ngIf="itemData.passageData?.videoUrl"
+        class="w-full h-64 object-contain"
+        controls
+        [attr.aria-label]="'Video content for ' + itemData.title">
+        <source [src]="itemData.passageData.videoUrl" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div *ngIf="!itemData.passageData?.videoUrl" class="video-placeholder h-64 flex items-center justify-center text-white">
+        <i class="fas fa-play-circle text-4xl"></i>
+        <span class="ml-2">Video not available</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Passage Panel -->
+  <div 
+    *ngIf="hasText() && activeTab === 'passage'" 
+    id="passage-panel"
+    class="passage-panel mb-6"
+    role="tabpanel"
+    aria-labelledby="passage-tab">
+    <article 
+      class="passage-content p-4 bg-gray-50 rounded-lg border max-h-64 overflow-y-auto"
+      [attr.aria-label]="'Reading passage: ' + itemData.title"
+      role="article"
+      tabindex="0">
+      <div class="prose prose-sm max-w-none" [innerHTML]="itemData.passageData?.passage"></div>
+    </article>
+  </div>
+
+  <!-- Question Section -->
+  <div class="question-section mt-6 p-4 border-t-2 border-blue-200">
+    <h3 class="text-lg font-semibold text-gray-800 mb-3">
+      {{ itemData.passageData?.question.text }}
+    </h3>
+
+    <div class="answer-options" role="radiogroup" [attr.aria-label]="'Answer options for ' + itemData.title">
+      <div 
+        *ngFor="let option of itemData.passageData?.question.options; let i = index"
+        class="option-item mb-2">
+        <label 
+          class="option-label"
+          [class.selected]="selectedAnswer === i"
+          [attr.for]="'option-' + i">
+          <input 
+            type="radio"
+            [id]="'option-' + i"
+            [name]="'question-' + itemData.itemId"
+            [value]="i"
+            [checked]="selectedAnswer === i"
+            (change)="onAnswerSelect(i)"
+            (keydown)="onKeyDown($event, i)"
+            class="sr-only"
+            role="radio"
+            [attr.aria-checked]="selectedAnswer === i"
+            [attr.aria-describedby]="'option-text-' + i">
+          <span class="option-indicator">{{ getOptionLetter(i) }}</span>
+          <span [id]="'option-text-' + i" class="option-text">{{ option }}</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls mt-6 flex justify-between">
+      <button 
+        class="btn btn-secondary"
+        (click)="clearAnswer()"
+        [disabled]="selectedAnswer === null"
+        [attr.aria-label]="'Clear selected answer'">
+        Clear
+      </button>
+      
+      <button 
+        class="btn btn-primary"
+        (click)="submitAnswer()"
+        [disabled]="!isValidSelection()"
+        [attr.aria-label]="'Submit answer'">
+        Submit
+      </button>
+    </div>
+
+    <!-- Progress indicator -->
+    <div class="progress-indicator mt-4 text-sm text-gray-600" aria-live="polite">
+      <span *ngIf="selectedAnswer !== null">
+        Answer selected: {{ getOptionLetter(selectedAnswer) }}
+      </span>
+      <span *ngIf="selectedAnswer === null">
+        Please select an answer
+      </span>
+    </div>
+  </div>
+</div>

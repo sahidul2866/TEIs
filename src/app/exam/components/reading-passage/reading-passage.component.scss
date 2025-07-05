@@ -1,0 +1,144 @@
+.reading-passage-container {
+  @apply max-w-4xl mx-auto p-4;
+}
+
+.stimulus {
+  @apply border-b border-gray-200 pb-4;
+}
+
+.tab-navigation {
+  @apply flex border-b border-gray-200;
+  
+  .tab-btn {
+    @apply px-4 py-2 mr-2 font-medium text-gray-600 border-b-2 border-transparent;
+    @apply hover:text-gray-800 hover:border-gray-300;
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+    @apply transition-colors duration-150;
+    
+    &.active {
+      @apply text-blue-600 border-blue-600;
+    }
+  }
+}
+
+.video-container {
+  @apply relative shadow-md;
+  
+  .video-placeholder {
+    @apply bg-gray-800;
+  }
+}
+
+.passage-content {
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500;
+  @apply shadow-sm;
+  
+  .prose {
+    @apply text-gray-800 leading-relaxed;
+    
+    p {
+      @apply mb-3;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+      @apply text-gray-900 font-semibold;
+    }
+  }
+}
+
+.question-section {
+  @apply bg-white;
+}
+
+.option-item {
+  @apply transition-all duration-150;
+}
+
+.option-label {
+  @apply flex items-start p-3 rounded-lg border border-gray-200 cursor-pointer;
+  @apply hover:bg-blue-50 hover:border-blue-300;
+  @apply focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2;
+  @apply transition-all duration-150;
+  
+  &.selected {
+    @apply bg-blue-100 border-blue-400 ring-2 ring-blue-500 ring-offset-2;
+  }
+}
+
+.option-indicator {
+  @apply flex-shrink-0 w-8 h-8 bg-gray-200 text-gray-700 rounded-full;
+  @apply flex items-center justify-center font-semibold text-sm mr-3;
+  @apply transition-colors duration-150;
+  
+  .option-label.selected & {
+    @apply bg-blue-600 text-white;
+  }
+}
+
+.option-text {
+  @apply flex-1 text-gray-800 leading-relaxed;
+}
+
+.controls {
+  @apply border-t border-gray-200 pt-4;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-lg font-medium transition-all duration-150;
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+  
+  &.btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700;
+    @apply focus:ring-blue-500;
+    @apply disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed;
+  }
+  
+  &.btn-secondary {
+    @apply bg-gray-200 text-gray-700 hover:bg-gray-300;
+    @apply focus:ring-gray-500;
+    @apply disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed;
+  }
+}
+
+.progress-indicator {
+  @apply text-center font-medium;
+}
+
+// Accessibility enhancements
+.sr-only {
+  @apply absolute w-px h-px p-0 -m-px overflow-hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Keyboard navigation
+.option-label:focus-within {
+  @apply ring-2 ring-blue-500 ring-offset-2;
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .option-label {
+    @apply border-2;
+    
+    &.selected {
+      @apply border-blue-800 bg-blue-200;
+    }
+  }
+  
+  .option-indicator {
+    @apply border border-gray-600;
+    
+    .option-label.selected & {
+      @apply border-blue-800;
+    }
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  * {
+    @apply transition-none;
+  }
+}

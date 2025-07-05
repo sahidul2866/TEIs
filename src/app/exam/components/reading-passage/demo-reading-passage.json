@@ -1,0 +1,24 @@
+{
+  "itemId": "reading-passage-01",
+  "interactionType": "readingPassage",
+  "title": "The Water Cycle",
+  "stimulus": "Read the passage about the water cycle and answer the question below.",
+  "instructions": "First read the passage, then select the best answer to the comprehension question.",
+  "points": 1,
+  "passageData": {
+    "passage": "<p>The water cycle is a continuous process that describes how water moves through the Earth's environment. It begins when the sun heats water in oceans, lakes, and rivers, causing <strong>evaporation</strong>. The water vapor rises into the atmosphere where it cools and forms clouds through a process called <strong>condensation</strong>.</p><p>When the water droplets in clouds become too heavy, they fall back to Earth as <strong>precipitation</strong> in the form of rain, snow, or hail. Some of this water flows back into rivers and streams, eventually returning to the ocean. This movement is called <strong>runoff</strong>. Other water soaks into the ground, becoming <strong>groundwater</strong> that can feed plants or refill underground water sources.</p><p>The water cycle is essential for all life on Earth. It distributes fresh water around the planet, supports plant growth, and helps regulate Earth's temperature. Understanding this process helps scientists predict weather patterns and manage water resources effectively.</p>",
+    "videoUrl": null,
+    "hasVideo": false,
+    "hasText": true,
+    "question": {
+      "text": "According to the passage, what happens to water vapor when it rises into the atmosphere?",
+      "options": [
+        "It immediately falls back to Earth as precipitation",
+        "It cools and forms clouds through condensation",
+        "It becomes groundwater that feeds plants",
+        "It flows back into rivers and streams as runoff"
+      ],
+      "correctAnswer": 1
+    }
+  }
+}

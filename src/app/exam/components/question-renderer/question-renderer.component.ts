@@ -21,28 +21,28 @@ export class QuestionRendererComponent implements OnInit {
 
   private initializeAnswer(): void {
     switch (this.question.type) {
-      case 'multiple-response':
+      case 'multipleResponse':
         this.userAnswer = [];
         break;
-      case 'fill-blank':
+      case 'fillBlank':
         this.userAnswer = new Array(this.question.blanks?.length || 0).fill('');
         break;
-      case 'hot-text':
+      case 'hotText':
         this.userAnswer = [];
         break;
-      case 'drag-drop':
+      case 'dragDrop':
         this.userAnswer = {};
         break;
-      case 'hot-spot':
+      case 'hotspot':
         this.userAnswer = [];
         break;
-      case 'table-grid':
+      case 'tableGrid':
         this.userAnswer = [];
         break;
-      case 'point-graph':
+      case 'pointGraph':
         this.userAnswer = [];
         break;
-      case 'inline-choice':
+      case 'inlineChoice':
         this.userAnswer = new Array(this.question.choiceData?.length || 0).fill(-1);
         break;
       default:

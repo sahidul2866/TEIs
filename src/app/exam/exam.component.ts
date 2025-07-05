@@ -79,26 +79,26 @@ export class ExamComponent implements OnInit {
     if (!userAnswer) return false;
 
     switch (question.type) {
-      case 'multiple-choice':
+      case 'multipleChoice':
         return userAnswer === question.correctAnswer;
       
-      case 'multiple-response':
+      case 'multipleResponse':
         if (!Array.isArray(userAnswer) || !Array.isArray(question.correctAnswer)) return false;
         return userAnswer.length === question.correctAnswer.length &&
                userAnswer.every((val: any) => question.correctAnswer.includes(val));
       
-      case 'fill-blank':
+      case 'fillBlank':
         if (!Array.isArray(userAnswer) || !Array.isArray(question.correctAnswer)) return false;
         return userAnswer.length === question.correctAnswer.length &&
                userAnswer.every((val: any, index: number) => 
                  val?.toLowerCase().trim() === question.correctAnswer[index]?.toLowerCase().trim());
       
-      case 'hot-text':
+      case 'hotText':
         if (!Array.isArray(userAnswer) || !Array.isArray(question.correctAnswer)) return false;
         return userAnswer.length === question.correctAnswer.length &&
                userAnswer.every((val: any) => question.correctAnswer.includes(val));
       
-      case 'drag-drop':
+      case 'dragDrop':
         // Compare drag-drop mappings
         const correctMapping = question.correctAnswer;
         for (const zone in correctMapping) {
@@ -108,35 +108,35 @@ export class ExamComponent implements OnInit {
         }
         return true;
       
-      case 'hot-spot':
+      case 'hotspot':
         return Array.isArray(userAnswer) && Array.isArray(question.correctAnswer) &&
                userAnswer.length === question.correctAnswer.length &&
                userAnswer.every((val: any) => question.correctAnswer.includes(val));
       
-      case 'table-grid':
+      case 'tableGrid':
         return Array.isArray(userAnswer) && Array.isArray(question.correctAnswer) &&
                userAnswer.length === question.correctAnswer.length &&
                userAnswer.every((val: any) => question.correctAnswer.includes(val));
       
-      case 'point-graph':
+      case 'pointGraph':
         if (!Array.isArray(userAnswer) || !Array.isArray(question.correctAnswer)) return false;
         return userAnswer.length === question.correctAnswer.length &&
                userAnswer.every((point: any) => 
                  question.correctAnswer.some((correctPoint: any) => 
                    Math.abs(point.x - correctPoint.x) < 0.1 && Math.abs(point.y - correctPoint.y) < 0.1));
       
-      case 'inline-choice':
+      case 'inlineChoice':
         return Array.isArray(userAnswer) && Array.isArray(question.correctAnswer) &&
                userAnswer.length === question.correctAnswer.length &&
                userAnswer.every((val: any, index: number) => val === question.correctAnswer[index]);
       
-      case 'equation-editor':
+      case 'equationEditor':
         return userAnswer?.toString().trim() === question.correctAnswer?.toString().trim();
       
-      case 'shape-transform':
+      case 'shapeTransformation':
         return userAnswer === question.correctAnswer;
       
-      case 'solution-set':
+      case 'solutionSet':
         return userAnswer === question.correctAnswer;
       
       default:

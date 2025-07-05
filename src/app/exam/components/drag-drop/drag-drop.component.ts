@@ -48,7 +48,7 @@ export class DragDropComponent implements OnInit, OnDestroy {
   private initializeAnswer(): void {
     if (!this.userAnswer || Object.keys(this.userAnswer).length === 0) {
       this.userAnswer = {};
-      this.question.dropZones?.forEach(zone => {
+      this.question.dropZones?.forEach((zone: any) => {
         this.userAnswer[zone.id] = [];
       });
       this.answerChange.emit(this.userAnswer);
