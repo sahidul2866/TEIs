@@ -9,11 +9,13 @@ import { TEIItemJSON } from '../../../models/question';
 @Component({
   selector: 'app-reading-passage',
   templateUrl: './reading-passage.component.html',
-  styleUrls: ['./reading-passage.component.scss']
+  styleUrls: ['./reading-passage.component.scss'],
+  standalone: false
 })
 export class ReadingPassageComponent implements OnInit {
-  @Input() itemData!: TEIItemJSON;
-  @Output() responseChange = new EventEmitter<{ itemId: string; response: any; isCorrect: boolean }>();
+  @Input() question!: any;
+  @Input() userAnswer: any = null;
+  @Output() answerChange = new EventEmitter<any>();
 
   selectedAnswer: number | null = null;
   activeTab: 'video' | 'passage' = 'passage';
