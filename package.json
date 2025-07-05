@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "postcss.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ng serve --port 5000 --host 0.0.0.0 --disable-host-check",
+    "start": "ng serve --port 5000 --host 0.0.0.0 --disable-host-check",
+    "build": "ng build"
   },
   "keywords": [],
   "author": "",
