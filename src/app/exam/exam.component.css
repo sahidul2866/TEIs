@@ -1,0 +1,19 @@
+.question-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+  gap: 0.5rem;
+  max-width: 600px;
+}
+
+.progress-animation {
+  transition: width 0.3s ease-in-out;
+}
+
+.result-card {
+  transition: all 0.3s ease-in-out;
+}
+
+.result-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}

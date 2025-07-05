@@ -1,0 +1,43 @@
+<div class="multiple-choice-container">
+  <!-- Options -->
+  <div class="options-list space-y-3">
+    <div 
+      *ngFor="let option of question.options; let i = index"
+      class="option-item"
+      [class.selected]="isSelected(i)"
+      (click)="onOptionSelect(i)">
+      
+      <div class="option-content flex items-center space-x-3">
+        <div class="option-indicator">
+          <div class="radio-button" [class.checked]="isSelected(i)">
+            <div class="radio-inner" [class.visible]="isSelected(i)"></div>
+          </div>
+        </div>
+        
+        <div class="option-label flex-1">
+          <span class="option-letter">{{ getOptionLetter(i) }}.</span>
+          <span class="option-text">{{ option }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Selection Summary -->
+  <div class="selection-summary mt-6 p-4 bg-gray-50 rounded-lg">
+    <h3 class="text-lg font-semibold text-gray-800 mb-2">Your Selection:</h3>
+    <div *ngIf="userAnswer !== null" class="selected-option">
+      <span class="font-medium text-blue-600">
+        {{ getOptionLetter(userAnswer) }}. {{ question.options![userAnswer] }}
+      </span>
+    </div>
+    <div *ngIf="userAnswer === null" class="no-selection text-gray-500 italic">
+      No option selected
+    </div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="instructions bg-blue-50 p-4 rounded-lg mt-6">
+    <i class="fas fa-check-circle text-blue-600 mr-2"></i>
+    <span class="text-blue-800">Select the best answer from the options above.</span>
+  </div>
+</div>

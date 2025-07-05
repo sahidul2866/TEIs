@@ -1,0 +1,97 @@
+<div class="question-content">
+  <div class="mb-6">
+    <p class="text-lg text-gray-800 leading-relaxed">{{ question.content }}</p>
+  </div>
+
+  <!-- Switch on question type -->
+  <div [ngSwitch]="question.type">
+    <app-drag-drop 
+      *ngSwitchCase="'drag-drop'"
+      [question]="question"
+      [userAnswer]="userAnswer"
+      (answerChange)="onAnswerUpdate($event)">
+    </app-drag-drop>
+
+    <app-fill-blank 
+      *ngSwitchCase="'fill-blank'"
+      [question]="question"
+      [userAnswer]="userAnswer"
+      (answerChange)="onAnswerUpdate($event)">
+    </app-fill-blank>
+
+    <app-hot-spot 
+      *ngSwitchCase="'hot-spot'"
+      [question]="question"
+      [userAnswer]="userAnswer"
+      (answerChange)="onAnswerUpdate($event)">
+    </app-hot-spot>
+
+    <app-equation-editor 
+      *ngSwitchCase="'equation-editor'"
+      [question]="question"
+      [userAnswer]="userAnswer"
+      (answerChange)="onAnswerUpdate($event)">
+    </app-equation-editor>
+
+    <app-hot-text 
+      *ngSwitchCase="'hot-text'"
+      [question]="question"
+      [userAnswer]="userAnswer"
+      (answerChange)="onAnswerUpdate($event)">
+    </app-hot-text>
+
+    <app-multiple-choice 
+      *ngSwitchCase="'multiple-choice'"
+      [question]="question"
+      [userAnswer]="userAnswer"
+      (answerChange)="onAnswerUpdate($event)">
+    </app-multiple-choice>
+
+    <app-multiple-response 
+      *ngSwitchCase="'multiple-response'"
+      [question]="question"
+      [userAnswer]="userAnswer"
+      (answerChange)="onAnswerUpdate($event)">
+    </app-multiple-response>
+
+    <app-inline-choice 
+      *ngSwitchCase="'inline-choice'"
+      [question]="question"
+      [userAnswer]="userAnswer"
+      (answerChange)="onAnswerUpdate($event)">
+    </app-inline-choice>
+
+    <app-table-grid 
+      *ngSwitchCase="'table-grid'"
+      [question]="question"
+      [userAnswer]="userAnswer"
+      (answerChange)="onAnswerUpdate($event)">
+    </app-table-grid>
+
+    <app-point-graph 
+      *ngSwitchCase="'point-graph'"
+      [question]="question"
+      [userAnswer]="userAnswer"
+      (answerChange)="onAnswerUpdate($event)">
+    </app-point-graph>
+
+    <app-shape-transform 
+      *ngSwitchCase="'shape-transform'"
+      [question]="question"
+      [userAnswer]="userAnswer"
+      (answerChange)="onAnswerUpdate($event)">
+    </app-shape-transform>
+
+    <app-solution-set 
+      *ngSwitchCase="'solution-set'"
+      [question]="question"
+      [userAnswer]="userAnswer"
+      (answerChange)="onAnswerUpdate($event)">
+    </app-solution-set>
+
+    <div *ngSwitchDefault class="text-center py-8">
+      <i class="fas fa-exclamation-triangle text-yellow-500 text-2xl mb-2"></i>
+      <p class="text-gray-600">Question type not implemented: {{ question.type }}</p>
+    </div>
+  </div>
+</div>

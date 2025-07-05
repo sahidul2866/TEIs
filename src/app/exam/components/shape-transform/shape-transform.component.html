@@ -1,0 +1,100 @@
+<div class="shape-transform-container">
+  <!-- Canvas Display -->
+  <div class="canvas-section mb-6">
+    <div class="canvas-wrapper bg-white rounded-lg border border-gray-200 p-4">
+      <canvas 
+        #shapeCanvas
+        class="shape-canvas border border-gray-300 rounded"
+        [style.width.px]="500"
+        [style.height.px]="400">
+      </canvas>
+    </div>
+  </div>
+
+  <!-- Transformation Controls -->
+  <div class="transformation-controls mb-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Available Transformations:</h3>
+    <div class="transformations-grid grid grid-cols-2 md:grid-cols-4 gap-3">
+      <button 
+        *ngFor="let transformation of getTransformations()"
+        (click)="onTransformationSelect(transformation)"
+        (mouseenter)="onTransformationPreview(transformation)"
+        (mouseleave)="onTransformationPreviewEnd()"
+        [class.selected]="selectedTransformation === transformation"
+        class="transformation-btn bg-white border-2 border-gray-300 rounded-lg p-4 hover:border-blue-500 transition-colors">
+        <div class="transformation-icon mb-2">
+          <i [class]="getTransformationIcon(transformation)" class="text-2xl"></i>
+        </div>
+        <div class="transformation-label text-sm font-medium text-gray-700">
+          {{ getTransformationLabel(transformation) }}
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Selected Transformation -->
+  <div class="selected-transformation mb-6 p-4 bg-gray-50 rounded-lg">
+    <h3 class="text-lg font-semibold text-gray-800 mb-2">Selected Transformation:</h3>
+    <div *ngIf="selectedTransformation" class="selected-info flex items-center justify-between">
+      <div class="transformation-details">
+        <span class="text-blue-600 font-medium">{{ getTransformationLabel(selectedTransformation) }}</span>
+        <p class="text-sm text-gray-600 mt-1">{{ getTransformationDescription(selectedTransformation) }}</p>
+      </div>
+      <button 
+        (click)="resetTransformation()"
+        class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors">
+        <i class="fas fa-undo mr-2"></i>
+        Reset
+      </button>
+    </div>
+    <div *ngIf="!selectedTransformation" class="no-selection text-gray-500 italic">
+      No transformation selected
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend mb-6 p-4 bg-blue-50 rounded-lg">
+    <h3 class="text-lg font-semibold text-blue-800 mb-3">Legend:</h3>
+    <div class="legend-items flex flex-wrap gap-6">
+      <div class="legend-item flex items-center space-x-2">
+        <div class="w-4 h-4 bg-blue-500 border-2 border-gray-800 rounded"></div>
+        <span class="text-sm text-blue-700">Original Shape</span>
+      </div>
+      <div class="legend-item flex items-center space-x-2">
+        <div class="w-4 h-4 bg-blue-300 border-2 border-red-500 rounded" style="border-style: dashed;"></div>
+        <span class="text-sm text-blue-700">Transformed Shape</span>
+      </div>
+      <div class="legend-item flex items-center space-x-2">
+        <div class="w-4 h-4 border border-gray-400 rounded grid-pattern"></div>
+        <span class="text-sm text-blue-700">Coordinate Grid</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shape Information -->
+  <div class="shape-info mb-6 p-4 bg-green-50 rounded-lg">
+    <h3 class="text-lg font-semibold text-green-800 mb-3">Shape Information:</h3>
+    <div class="shape-details grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div *ngFor="let shape of question.shapeData?.shapes; let i = index" class="shape-item">
+        <div class="shape-header flex items-center space-x-2 mb-2">
+          <div class="shape-color w-4 h-4 rounded" [style.background-color]="shape.color"></div>
+          <span class="font-medium text-green-700 capitalize">{{ shape.type }}</span>
+        </div>
+        <div class="shape-coordinates text-sm text-green-600">
+          <span class="font-medium">Coordinates:</span>
+          <span class="ml-2">{{ formatCoordinates(shape.coordinates) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="instructions bg-purple-50 p-4 rounded-lg">
+    <i class="fas fa-shapes text-purple-600 mr-2"></i>
+    <span class="text-purple-800">
+      Select a transformation to apply to the shape. The original shape is shown in solid lines, 
+      and the transformed shape is shown in dashed lines. Hover over transformation buttons to preview.
+    </span>
+  </div>
+</div>
+

@@ -1,0 +1,77 @@
+Generate a fully runnable Angular (TypeScript, ESM, NgModule-based) project named tei-practice-frontend that showcases SHSAT Tech-Enhanced Items (TEIs) on two pages: Home (/) and Exam (/exam). Include Tailwind CSS integration. Important: All components must be non-standalone—either omit the standalone flag or explicitly set standalone: false in every @Component decorator so that everything is declared in NgModules.
+
+Overall Setup:
+
+Run ng new tei-practice-frontend --routing --style=css --skip-install
+
+cd tei-practice-frontend && npm install
+
+In root package.json, set "type": "module" and scripts: "start": "ng serve", "build": "ng build"
+
+Integrate Tailwind: add tailwind.config.js, PostCSS setup, and insert @tailwind base; @tailwind components; @tailwind utilities; into src/styles.css
+
+Home Page (HomeComponent, route /):
+
+Create HomeComponent with standalone: false
+
+Display a brief intro to SHSAT TEIs
+
+“Start Practice” button linking to /exam
+
+Exam Feature Module (src/app/exam/):
+
+exam.module.ts: import CommonModule, FormsModule, ExamRoutingModule; declare ExamComponent and all TEI sub-components (each with standalone: false)
+
+exam-routing.module.ts: configure path '' → ExamComponent
+
+ExamComponent: call QuestionService.getDemoQuestions(), maintain currentIndex and an answers map, render <app-question-renderer [question]="questions[currentIndex]">, and provide Next/Previous/Submit buttons that calculate and display the score summary
+
+QuestionService & Models:
+
+Create src/app/models/question.ts with a Question interface covering fields for all TEI types
+
+In src/app/services/question.service.ts, export getDemoQuestions(): Question[] returning a hard-coded array with at least one example of each TEI type
+
+QuestionRendererComponent (declared in ExamModule with standalone: false):
+
+Take @Input() question: Question and use ngSwitch on question.type to render one of:
+• DragDropComponent
+• FillBlankComponent
+• HotSpotComponent
+• EquationEditorComponent
+• HotTextComponent
+• MultipleChoiceComponent
+• MultipleResponseComponent
+• InlineChoiceComponent
+• TableGridComponent
+• PointGraphComponent
+• ShapeTransformComponent
+• SolutionSetComponent
+
+Each sub-component is declared in ExamModule (not standalone) and uses template-driven forms via FormsModule
+
+Styling & UX:
+
+Use Tailwind utility classes for layout and responsiveness (p-4, grid, flex, etc.)
+
+Provide visual feedback: drag shadow (shadow-lg) during dragging, highlight correct answers in green and incorrect in red on submit, and smooth transition-all on hover/focus
+
+Final Steps:
+After scaffolding, run:
+
+sql
+Copy
+Edit
+npm install
+npm start
+Open http://localhost:4200/, click “Start Practice” to navigate to /exam, and interact with the full suite of TEI demos.
+
+
+
+
+
+
+
+
+
+Ask ChatGPT

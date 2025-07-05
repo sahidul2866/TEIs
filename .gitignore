@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Angular build / cache
+.angular/
+dist/
+coverage/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+thumbs.db

@@ -1,0 +1,148 @@
+<div class="solution-set-container">
+  <!-- Equation Display -->
+  <div class="equation-display mb-6 p-6 bg-white rounded-lg border border-gray-200">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Equation/Inequality:</h3>
+    <div class="equation-content text-center">
+      <div class="equation-text text-2xl font-mono text-blue-600 bg-blue-50 p-4 rounded-lg border border-blue-200">
+        {{ getEquation() }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Solution Options -->
+  <div class="solution-options mb-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Select Solution Set:</h3>
+    <div class="options-grid grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div 
+        *ngFor="let option of getSolutionOptions()"
+        class="solution-option"
+        [class.selected]="selectedSolution === option && !useCustomInput"
+        (click)="onSolutionSelect(option)">
+        <div class="option-content">
+          <div class="option-radio">
+            <div class="radio-button" [class.checked]="selectedSolution === option && !useCustomInput">
+              <div class="radio-inner" [class.visible]="selectedSolution === option && !useCustomInput"></div>
+            </div>
+          </div>
+          <div class="option-details flex-1">
+            <div class="option-solution text-lg font-mono text-gray-800">{{ option }}</div>
+            <div class="option-description text-sm text-gray-600">
+              {{ getSolutionTypeLabel(option) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Solution Input -->
+  <div class="custom-solution mb-6 p-4 bg-gray-50 rounded-lg">
+    <div class="custom-header flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold text-gray-800">Custom Solution:</h3>
+      <button 
+        (click)="toggleCustomInput()"
+        class="toggle-btn px-4 py-2 rounded-md transition-colors"
+        [class.bg-blue-500]="useCustomInput"
+        [class.text-white]="useCustomInput"
+        [class.bg-gray-200]="!useCustomInput"
+        [class.text-gray-700]="!useCustomInput">
+        <i class="fas fa-edit mr-2"></i>
+        {{ useCustomInput ? 'Using Custom' : 'Use Custom' }}
+      </button>
+    </div>
+    
+    <div *ngIf="useCustomInput" class="custom-input-section">
+      <div class="input-wrapper relative">
+        <input 
+          type="text"
+          [(ngModel)]="customSolution"
+          (ngModelChange)="onCustomSolutionChange($event)"
+          placeholder="Enter your solution (e.g., x > 2, x ≤ -1, etc.)"
+          class="custom-input w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors font-mono text-lg">
+        <div class="input-help absolute top-full left-0 mt-2 text-sm text-gray-500">
+          Use symbols: &gt; &lt; ≥ ≤ = and variables like x, y, etc.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Selected Solution Summary -->
+  <div class="solution-summary mb-6 p-4 bg-blue-50 rounded-lg">
+    <h3 class="text-lg font-semibold text-blue-800 mb-3">Your Solution:</h3>
+    <div *ngIf="hasValidAnswer()" class="selected-solution">
+      <div class="solution-display bg-white p-4 rounded border border-blue-200">
+        <div class="solution-text text-xl font-mono text-blue-600 mb-2">
+          {{ getCurrentAnswer() }}
+        </div>
+        <div class="solution-type text-sm text-blue-700">
+          {{ getSolutionTypeLabel(getCurrentAnswer()) }}
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!hasValidAnswer()" class="no-solution text-blue-600 italic text-center py-4">
+      No solution selected
+    </div>
+  </div>
+
+  <!-- Solution Validation -->
+  <div class="validation-section mb-6 p-4 bg-yellow-50 rounded-lg">
+    <h3 class="text-lg font-semibold text-yellow-800 mb-3">Solution Validation:</h3>
+    <div *ngIf="hasValidAnswer()" class="validation-result">
+      <div class="validation-status flex items-center space-x-2">
+        <i *ngIf="validateSolution(getCurrentAnswer())" class="fas fa-check-circle text-green-600"></i>
+        <i *ngIf="!validateSolution(getCurrentAnswer())" class="fas fa-exclamation-triangle text-red-600"></i>
+        <span [class.text-green-600]="validateSolution(getCurrentAnswer())"
+              [class.text-red-600]="!validateSolution(getCurrentAnswer())">
+          {{ validateSolution(getCurrentAnswer()) ? 'Valid format' : 'Invalid format' }}
+        </span>
+      </div>
+      <div class="validation-tips text-sm text-yellow-700 mt-2">
+        <strong>Tips:</strong> Make sure to use proper mathematical notation and valid variable names.
+      </div>
+    </div>
+  </div>
+
+  <!-- Solution Set Examples -->
+  <div class="examples-section mb-6 p-4 bg-green-50 rounded-lg">
+    <h3 class="text-lg font-semibold text-green-800 mb-3">Solution Set Examples:</h3>
+    <div class="examples-grid grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="example-item bg-white p-3 rounded border border-green-200">
+        <div class="example-solution font-mono text-green-600">x > 3</div>
+        <div class="example-description text-sm text-green-700">All numbers greater than 3</div>
+      </div>
+      <div class="example-item bg-white p-3 rounded border border-green-200">
+        <div class="example-solution font-mono text-green-600">x ≤ -2</div>
+        <div class="example-description text-sm text-green-700">All numbers less than or equal to -2</div>
+      </div>
+      <div class="example-item bg-white p-3 rounded border border-green-200">
+        <div class="example-solution font-mono text-green-600">-1 < x < 5</div>
+        <div class="example-description text-sm text-green-700">All numbers between -1 and 5</div>
+      </div>
+      <div class="example-item bg-white p-3 rounded border border-green-200">
+        <div class="example-solution font-mono text-green-600">x = 4</div>
+        <div class="example-description text-sm text-green-700">Exactly equal to 4</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Control Buttons -->
+  <div class="control-buttons mb-6 flex justify-center space-x-4">
+    <button 
+      (click)="clearAnswer()"
+      [disabled]="!hasValidAnswer()"
+      class="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+      <i class="fas fa-trash mr-2"></i>
+      Clear Answer
+    </button>
+  </div>
+
+  <!-- Instructions -->
+  <div class="instructions bg-purple-50 p-4 rounded-lg">
+    <i class="fas fa-info-circle text-purple-600 mr-2"></i>
+    <span class="text-purple-800">
+      Choose from the predefined solution options or enter a custom solution. 
+      Make sure your solution correctly represents the solution set for the given equation or inequality.
+    </span>
+  </div>
+</div>
+

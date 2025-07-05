@@ -1,0 +1,112 @@
+.inline-choice-container {
+  max-width: 800px;
+}
+
+.content-wrapper {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  line-height: 1.8;
+}
+
+.inline-choice-select {
+  font-weight: 600;
+  color: #1e40af;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border: 2px solid #3b82f6;
+  min-width: 150px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.inline-choice-select:focus {
+  outline: none;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.inline-choice-select option {
+  background: white;
+  color: #1f2937;
+  padding: 0.5rem;
+}
+
+.inline-choice-select option:disabled {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.choice-item {
+  transition: all 0.2s ease;
+  border-left: 4px solid transparent;
+}
+
+.choice-item:hover {
+  border-left-color: #3b82f6;
+  transform: translateX(2px);
+}
+
+.choice-item select {
+  border: 2px solid #e5e7eb;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+}
+
+.choice-item select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.selection-summary {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border: 1px solid #cbd5e1;
+}
+
+.selection-item {
+  transition: all 0.2s ease;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.selection-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-indicator {
+  background: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.content-part {
+  margin-right: 0.25rem;
+}
+
+.inline-choice-wrapper {
+  display: inline-block;
+  margin: 0 0.25rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .inline-choice-select {
+    min-width: 120px;
+    font-size: 0.875rem;
+  }
+  
+  .selections-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

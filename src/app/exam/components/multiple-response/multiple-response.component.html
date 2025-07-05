@@ -1,0 +1,52 @@
+<div class="multiple-response-container">
+  <!-- Options -->
+  <div class="options-list space-y-3">
+    <div 
+      *ngFor="let option of question.options; let i = index"
+      class="option-item"
+      [class.selected]="isSelected(i)"
+      (click)="onOptionToggle(i)">
+      
+      <div class="option-content flex items-center space-x-3">
+        <div class="option-indicator">
+          <div class="checkbox" [class.checked]="isSelected(i)">
+            <i *ngIf="isSelected(i)" class="fas fa-check checkbox-icon"></i>
+          </div>
+        </div>
+        
+        <div class="option-label flex-1">
+          <span class="option-letter">{{ getOptionLetter(i) }}.</span>
+          <span class="option-text">{{ option }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Selection Summary -->
+  <div class="selection-summary mt-6 p-4 bg-gray-50 rounded-lg">
+    <div class="summary-header flex items-center justify-between mb-3">
+      <h3 class="text-lg font-semibold text-gray-800">Your Selections:</h3>
+      <span class="selection-count bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+        {{ getSelectedCount() }} selected
+      </span>
+    </div>
+    
+    <div *ngIf="getSelectedCount() > 0" class="selected-options space-y-2">
+      <div 
+        *ngFor="let selectedOption of getSelectedOptions()"
+        class="selected-option bg-white p-3 rounded border border-blue-200">
+        <span class="font-medium text-blue-600">{{ selectedOption }}</span>
+      </div>
+    </div>
+    
+    <div *ngIf="getSelectedCount() === 0" class="no-selection text-gray-500 italic text-center py-4">
+      No options selected
+    </div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="instructions bg-green-50 p-4 rounded-lg mt-6">
+    <i class="fas fa-check-square text-green-600 mr-2"></i>
+    <span class="text-green-800">Select all answers that apply. You can choose multiple options.</span>
+  </div>
+</div>

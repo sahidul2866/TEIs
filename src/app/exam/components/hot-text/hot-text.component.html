@@ -1,0 +1,61 @@
+<div class="hot-text-container">
+  <!-- Text Display -->
+  <div class="text-display mb-6">
+    <div class="text-content text-lg leading-relaxed p-6 bg-white rounded-lg border border-gray-200">
+      <span 
+        *ngFor="let hotText of question.hotTexts"
+        [class]="getTextClass(hotText.id)"
+        (click)="onTextClick(hotText.id)"
+        [attr.data-selectable]="isSelectable(hotText.id)"
+        [attr.data-selected]="isSelected(hotText.id)">
+        {{ hotText.text }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Selection Summary -->
+  <div class="selection-summary mb-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-3">Selected Words:</h3>
+    <div class="selected-words flex flex-wrap gap-2">
+      <span 
+        *ngFor="let selectedId of userAnswer"
+        class="selected-word bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+        {{ getSelectedText(selectedId) }}
+        <button 
+          (click)="onTextClick(selectedId)"
+          class="ml-2 text-blue-600 hover:text-blue-800">
+          <i class="fas fa-times"></i>
+        </button>
+      </span>
+      <span *ngIf="userAnswer.length === 0" class="text-gray-500 italic">
+        No words selected
+      </span>
+    </div>
+  </div>
+
+  <!-- Statistics -->
+  <div class="statistics mb-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="stat-item bg-gray-50 p-4 rounded-lg text-center">
+      <div class="text-2xl font-bold text-gray-700">{{ getTotalSelectableWords() }}</div>
+      <div class="text-sm text-gray-600">Total Words</div>
+    </div>
+    <div class="stat-item bg-blue-50 p-4 rounded-lg text-center">
+      <div class="text-2xl font-bold text-blue-600">{{ getSelectableWords() }}</div>
+      <div class="text-sm text-blue-600">Selectable</div>
+    </div>
+    <div class="stat-item bg-green-50 p-4 rounded-lg text-center">
+      <div class="text-2xl font-bold text-green-600">{{ userAnswer.length }}</div>
+      <div class="text-sm text-green-600">Selected</div>
+    </div>
+    <div class="stat-item bg-yellow-50 p-4 rounded-lg text-center">
+      <div class="text-2xl font-bold text-yellow-600">{{ getSelectableWords() - userAnswer.length }}</div>
+      <div class="text-sm text-yellow-600">Remaining</div>
+    </div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="instructions bg-indigo-50 p-4 rounded-lg">
+    <i class="fas fa-highlighter text-indigo-600 mr-2"></i>
+    <span class="text-indigo-800">Click on the highlighted words to select them. Click again to deselect.</span>
+  </div>
+</div>

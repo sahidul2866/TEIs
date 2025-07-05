@@ -1,0 +1,261 @@
+Tech-Enhanced Items (TEIs) take question-and-answer beyond static text by giving students interactive tools. Below is an in-depth look at each common TEI type—how it works, what students see and do, and best practices for design and practice.
+
+---
+
+## 1. Drag-and-Drop
+
+**What it is:**
+Students grab (“drag”) labels, words, or images and place them onto designated targets (“drop zones”).
+
+**Interface & Interaction:**
+
+* A list or tray of draggable items sits beside or below the prompt graphic/text.
+* Drop zones are outlined boxes or hotspots in a diagram or passage.
+* On hover, the dragged item shows a shadow; when dropped, it “snaps” into place.
+
+**Scoring & Feedback:**
+
+* Instant: correct placement highlights green; incorrect briefly flashes red.
+* Partial credit possible if multiple drops—each zone scored separately.
+
+**Design Tips:**
+
+* Limit simultaneous draggable items to 4–6.
+* Clearly label drop zones (e.g. numbered).
+* Support keyboard dragging (accessibility).
+
+---
+
+## 2. Fill-in-the-Blank
+
+**What it is:**
+Embedded text fields replace missing words or numbers in a sentence or table.
+
+**Interface & Interaction:**
+
+* Underlined blanks appear inline within a sentence or cell.
+* Students type freely; case-insensitive by default.
+
+**Scoring & Feedback:**
+
+* Exact match to key (or list of synonyms) for full credit.
+* Highlight correct entries green on blur; incorrect entries may show the correct answer on final submission.
+
+**Design Tips:**
+
+* Keep blanks short (1–3 words).
+* Supply a word bank if focus is conceptual rather than recall.
+* Validate as students type or only on final submit—choose based on desired challenge level.
+
+---
+
+## 3. Hot Spot
+
+**What it is:**
+An image (map, diagram, graph) with invisible “click zones” that students select.
+
+**Interface & Interaction:**
+
+* The base image is visible; hotspots are transparent `<div>` overlays.
+* Cursor changes to pointer on hover; clicking registers a selection.
+
+**Scoring & Feedback:**
+
+* Correct clicks highlight the area in green; wrong clicks highlight in red.
+* May allow multiple selections (e.g., “Select all shaded regions”).
+
+**Design Tips:**
+
+* Define hotspot boundaries with simple rectangles or polygons.
+* Offer a “clear selection” button.
+* Ensure images are high-resolution and responsive.
+
+---
+
+## 4. Equation Editor
+
+**What it is:**
+A mini-editor for building mathematical expressions using a toolbar of symbols.
+
+**Interface & Interaction:**
+
+* An input field accompanied by buttons for symbols (±, √, ∑, fractions, superscripts).
+* Clicking a symbol inserts it at the cursor; students can type numbers/variables.
+
+**Scoring & Feedback:**
+
+* Expressions compared as normalized strings or MathML.
+* Show a rendered preview using KaTeX/MathJax.
+
+**Design Tips:**
+
+* Keep the toolbar minimal: only symbols needed for the item.
+* Provide a “clear” or “delete last” control.
+* Support keyboard shortcuts for power users.
+
+---
+
+## 5. Hot Text
+
+**What it is:**
+Students select one or more words or phrases within a passage.
+
+**Interface & Interaction:**
+
+* The passage is split into clickable `<span>` segments.
+* Clicking toggles a highlight style (e.g., background-color: yellow).
+
+**Scoring & Feedback:**
+
+* Compare the set of selected span IDs against the key.
+* Highlight correct spans green, incorrect selections red on submit.
+
+**Design Tips:**
+
+* Don’t split words awkwardly—use sentence fragments or clauses.
+* Group multi-word phrases into single spans.
+
+---
+
+## 6. Inline Choice
+
+**What it is:**
+Dropdown menus embedded in a sentence replace blanks.
+
+**Interface & Interaction:**
+
+* Each blank is a `<select>` element with 3–5 options.
+* Students choose the best word/phrase.
+
+**Scoring & Feedback:**
+
+* Immediate or on-submit validation of each dropdown.
+* Correct selections turn the dropdown border green.
+
+**Design Tips:**
+
+* Keep choices visually distinct.
+* Avoid too many dropdowns in one sentence (max 3–4).
+
+---
+
+## 7. Multiple Choice & Multiple Response
+
+**What it is:**
+Standard radio buttons (single-choice) or checkboxes (multi-choice).
+
+**Interface & Interaction:**
+
+* List of options beneath the prompt.
+* Single-choice: one radio per group.
+* Multiple-response: multiple checkboxes.
+
+**Scoring & Feedback:**
+
+* Radio: full credit only if the one correct is picked.
+* Checkbox: partial credit if some correct are chosen; penalize wrong picks if required.
+
+**Design Tips:**
+
+* Randomize option order.
+* Indicate how many selections are allowed.
+
+---
+
+## 8. Table Grid
+
+**What it is:**
+An editable grid where students fill in multiple cells.
+
+**Interface & Interaction:**
+
+* Render an HTML `<table>` of `<td contenteditable="true">`.
+* Students click and type in each cell.
+
+**Scoring & Feedback:**
+
+* Compare each cell’s text to the key grid.
+* Highlight incorrect cells red.
+
+**Design Tips:**
+
+* Pre-fill row/column headers.
+* Limit grid size (max 5×5) to avoid overwhelm.
+
+---
+
+## 9. Point Graph
+
+**What it is:**
+Interactive coordinate plane where students plot points.
+
+**Interface & Interaction:**
+
+* SVG-based grid with labeled axes.
+* Clicking adds a dot and coordinates text.
+
+**Scoring & Feedback:**
+
+* Compare plotted `(x,y)` pairs to the answer set.
+* Allow dragging points to fine-tune.
+
+**Design Tips:**
+
+* Snap points to grid intersections.
+* Provide “undo” for misclicks.
+
+---
+
+## 10. Shape Transformation
+
+**What it is:**
+Manipulate a geometric figure by translating or rotating.
+
+**Interface & Interaction:**
+
+* Show an SVG shape and sliders or drag handles.
+* Transform parameters (e.g. rotation angle, x/y shift) bound to the SVG’s transform attribute.
+
+**Scoring & Feedback:**
+
+* Compare final transform matrix or parameter values.
+* Show before/after overlays on submit.
+
+**Design Tips:**
+
+* Animate the transform in real time.
+* Limit rotation to 90° increments if needed.
+
+---
+
+## 11. Solution Set
+
+**What it is:**
+Enter a list (set) of answers, like all solutions to an equation.
+
+**Interface & Interaction:**
+
+* Render multiple `<input>` fields or a comma-separated text box.
+* Students enter values; pressing Enter adds another field.
+
+**Scoring & Feedback:**
+
+* Treat the answer as an unordered set—order doesn’t matter.
+* Validate unique entries and highlight missing or extra values.
+
+**Design Tips:**
+
+* Provide clear instructions (“Enter all solutions separated by commas”).
+* Auto-split comma lists into individual values.
+
+---
+
+### General Development & Practice Considerations
+
+* **Accessibility:** Ensure keyboard navigation, ARIA labels, and screen-reader compatibility.
+* **Responsiveness:** Design TEIs to work on desktop and tablet; test touch events.
+* **Performance:** Lazy-load heavy components (e.g. EquationEditor) and optimize SVGs.
+* **Feedback Strategy:** Decide which interactions give instant vs. final validation.
+* **Analytics:** Track student interactions per TEI type to identify difficult formats.
+
+By mastering each TEI interface and behavior, students build digital fluency and content skills—key to success on the SHSAT’s new tech-enhanced format.

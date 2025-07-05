@@ -1,0 +1,68 @@
+<div class="hot-spot-container">
+  <!-- Image/Content Area -->
+  <div class="relative bg-gray-100 rounded-lg p-4 mb-6" style="min-height: 400px;">
+    <!-- Sample Cell Diagram -->
+    <div class="relative w-full h-80 bg-white rounded-lg border-2 border-gray-300 overflow-hidden">
+      <!-- Cell Outline -->
+      <svg width="100%" height="100%" viewBox="0 0 400 300" class="absolute inset-0">
+        <!-- Cell Wall -->
+        <rect x="20" y="20" width="360" height="260" fill="none" stroke="#22c55e" stroke-width="3" rx="10"/>
+        
+        <!-- Nucleus -->
+        <circle cx="170" cy="120" r="25" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+        <text x="170" y="125" text-anchor="middle" class="text-xs font-semibold">Nucleus</text>
+        
+        <!-- Chloroplasts -->
+        <ellipse cx="100" cy="100" rx="18" ry="12" fill="#10b981" stroke="#059669" stroke-width="2"/>
+        <ellipse cx="280" cy="80" rx="18" ry="12" fill="#10b981" stroke="#059669" stroke-width="2"/>
+        <ellipse cx="320" cy="150" rx="18" ry="12" fill="#10b981" stroke="#059669" stroke-width="2"/>
+        
+        <!-- Vacuole -->
+        <circle cx="250" cy="180" r="30" fill="#e0e7ff" stroke="#6366f1" stroke-width="2"/>
+        <text x="250" y="185" text-anchor="middle" class="text-xs font-semibold">Vacuole</text>
+        
+        <!-- Mitochondria -->
+        <ellipse cx="120" cy="200" rx="15" ry="8" fill="#ef4444" stroke="#dc2626" stroke-width="2"/>
+        <ellipse cx="300" cy="220" rx="15" ry="8" fill="#ef4444" stroke="#dc2626" stroke-width="2"/>
+        
+        <!-- Labels -->
+        <text x="200" y="15" text-anchor="middle" class="text-sm font-bold">Plant Cell Diagram</text>
+      </svg>
+      
+      <!-- Hot Spots -->
+      <div 
+        *ngFor="let hotSpot of question.hotSpots"
+        class="hot-spot"
+        [ngStyle]="getHotSpotStyle(hotSpot)"
+        (click)="onHotSpotClick(hotSpot.id)"
+        [title]="'Click to select ' + hotSpot.id">
+        
+        <!-- Visual indicator for selected hot spots -->
+        <div *ngIf="isSelected(hotSpot.id)" class="absolute inset-0 flex items-center justify-center">
+          <i class="fas fa-check text-blue-600 text-lg"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Selection Status -->
+  <div class="selection-status mb-4">
+    <h3 class="text-lg font-semibold text-gray-800 mb-2">Selected Areas:</h3>
+    <div *ngIf="userAnswer.length > 0" class="flex flex-wrap gap-2">
+      <span 
+        *ngFor="let selectedId of userAnswer"
+        class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+        {{ selectedId }}
+      </span>
+    </div>
+    <div *ngIf="userAnswer.length === 0" class="text-gray-500 italic">
+      No areas selected
+    </div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="instructions bg-green-50 p-4 rounded-lg">
+    <i class="fas fa-mouse-pointer text-green-600 mr-2"></i>
+    <span class="text-green-800">Click on the specific areas of the diagram as instructed. You can select multiple areas if needed.</span>
+  </div>
+</div>

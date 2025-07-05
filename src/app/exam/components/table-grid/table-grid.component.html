@@ -1,0 +1,98 @@
+<div class="table-grid-container">
+  <!-- Grid Display -->
+  <div class="grid-display mb-6">
+    <div class="grid-wrapper bg-white rounded-lg border border-gray-200 p-4 overflow-x-auto">
+      <table class="grid-table w-full">
+        <thead *ngIf="question.tableData?.headers">
+          <tr>
+            <th class="grid-header empty-cell"></th>
+            <th *ngFor="let header of question.tableData?.headers" class="grid-header">
+              {{ header }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of getGridData(); let i = index">
+            <td class="grid-row-header">{{ i + 1 }}</td>
+            <td *ngFor="let cell of row" 
+                [class]="getCellClass(cell)"
+                (click)="isCellSelectable(cell) ? onCellClick(cell.id) : null"
+                [attr.data-selectable]="isCellSelectable(cell)"
+                [attr.data-selected]="isCellSelected(cell.id)">
+              <div class="cell-content">
+                <span class="cell-value">{{ cell.content }}</span>
+                <i *ngIf="isCellSelected(cell.id)" class="fas fa-check cell-check"></i>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Selection Controls -->
+  <div class="selection-controls mb-6 flex justify-between items-center bg-gray-50 p-4 rounded-lg">
+    <div class="selection-info">
+      <span class="text-sm font-medium text-gray-700">
+        {{ getSelectedCount() }} of {{ getTotalSelectableCells() }} cells selected
+      </span>
+    </div>
+    <div class="control-buttons space-x-2">
+      <button 
+        (click)="selectAll()"
+        [disabled]="getSelectedCount() === getTotalSelectableCells()"
+        class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+        Select All
+      </button>
+      <button 
+        (click)="clearSelection()"
+        [disabled]="getSelectedCount() === 0"
+        class="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+        Clear All
+      </button>
+    </div>
+  </div>
+
+  <!-- Selection Summary -->
+  <div class="selection-summary mb-6 p-4 bg-gray-50 rounded-lg">
+    <h3 class="text-lg font-semibold text-gray-800 mb-3">Selected Cells:</h3>
+    <div *ngIf="getSelectedCount() > 0" class="selected-cells-grid grid grid-cols-2 md:grid-cols-4 gap-2">
+      <div *ngFor="let cell of getSelectedCells()" 
+           class="selected-cell bg-white p-2 rounded border border-blue-200 text-center">
+        <div class="cell-info">
+          <span class="text-sm font-medium text-blue-600">{{ cell.content }}</span>
+          <div class="text-xs text-gray-500">Row {{ cell.row + 1 }}, Col {{ cell.col + 1 }}</div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="getSelectedCount() === 0" class="no-selection text-gray-500 italic text-center py-4">
+      No cells selected
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend mb-6 p-4 bg-blue-50 rounded-lg">
+    <h3 class="text-lg font-semibold text-blue-800 mb-3">Legend:</h3>
+    <div class="legend-items flex flex-wrap gap-4">
+      <div class="legend-item flex items-center space-x-2">
+        <div class="w-4 h-4 bg-blue-100 border border-blue-300 rounded"></div>
+        <span class="text-sm text-blue-700">Selectable</span>
+      </div>
+      <div class="legend-item flex items-center space-x-2">
+        <div class="w-4 h-4 bg-blue-200 border-2 border-blue-500 rounded"></div>
+        <span class="text-sm text-blue-700">Selected</span>
+      </div>
+      <div class="legend-item flex items-center space-x-2">
+        <div class="w-4 h-4 bg-gray-100 border border-gray-300 rounded"></div>
+        <span class="text-sm text-gray-600">Non-selectable</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="instructions bg-indigo-50 p-4 rounded-lg">
+    <i class="fas fa-table text-indigo-600 mr-2"></i>
+    <span class="text-indigo-800">Click on the highlighted cells to select them. Selected cells will be marked with a checkmark.</span>
+  </div>
+</div>
+

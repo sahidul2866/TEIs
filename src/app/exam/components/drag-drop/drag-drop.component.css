@@ -1,0 +1,38 @@
+.drag-drop-container {
+  user-select: none;
+}
+
+.drag-item {
+  cursor: move;
+  transition: all 0.2s ease;
+}
+
+.drag-item:hover {
+  transform: translateY(-2px);
+}
+
+.drop-zone {
+  min-height: 120px;
+  transition: all 0.2s ease;
+}
+
+.drop-zone.drag-over {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+  transform: scale(1.02);
+}
+
+.zone-header {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+.available-items .drag-item {
+  background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
+  border: 2px solid #e2e8f0;
+}
+
+.drop-zones .drag-item {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 2px solid #0ea5e9;
+}

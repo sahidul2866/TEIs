@@ -1,0 +1,175 @@
+<div class="home-page">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge badge-primary">🎯 SHSAT Preparation</span>
+        </div>
+        <h1 class="hero-title">Master Technology-Enhanced Items</h1>
+        <p class="hero-description">
+          Practice with authentic SHSAT TEI question types. Build digital fluency and test-taking confidence 
+          with our comprehensive interactive platform designed for the modern SHSAT format.
+        </p>
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-number">12</span>
+            <span class="stat-label">TEI Types</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">100+</span>
+            <span class="stat-label">Practice Questions</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">Real-time</span>
+            <span class="stat-label">Feedback</span>
+          </div>
+        </div>
+        <div class="hero-actions">
+          <a routerLink="/exam" class="btn btn-primary btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5,3 19,12 5,21 5,3"></polygon>
+            </svg>
+            Start Practice Exam
+          </a>
+          <button class="btn btn-secondary btn-lg" (click)="scrollToTeiTypes()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+            </svg>
+            Explore TEI Types
+          </button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="tei-preview-grid">
+          <div class="preview-item drag-preview">
+            <div class="mini-drag-item">Text</div>
+            <div class="mini-drop-zone"></div>
+          </div>
+          <div class="preview-item graph-preview">
+            <div class="mini-graph">
+              <div class="mini-point"></div>
+              <div class="mini-point"></div>
+            </div>
+          </div>
+          <div class="preview-item equation-preview">
+            <div class="mini-equation">x² + y = 0</div>
+          </div>
+          <div class="preview-item choice-preview">
+            <div class="mini-choice selected"></div>
+            <div class="mini-choice"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEI Types Section -->
+  <section class="tei-section" id="tei-types">
+    <div class="container">
+      <div class="section-header">
+        <h2>Technology-Enhanced Item Types</h2>
+        <p>Master all 12 interactive question formats used in the SHSAT</p>
+      </div>
+      
+      <div class="tei-grid">
+        <div *ngFor="let type of teiTypes; let i = index" 
+             class="tei-card animate-fade-in" 
+             [style.animation-delay.ms]="i * 100">
+          <div class="tei-card-header">
+            <div class="tei-icon" [innerHTML]="type.icon"></div>
+            <h3>{{ type.name }}</h3>
+            <span class="tei-difficulty" [class]="'difficulty-' + type.difficulty">
+              {{ type.difficulty | titlecase }}
+            </span>
+          </div>
+          <div class="tei-card-body">
+            <p class="tei-description">{{ type.description }}</p>
+            <div class="tei-features">
+              <span *ngFor="let feature of type.features" class="feature-tag">
+                {{ feature }}
+              </span>
+            </div>
+          </div>
+          <div class="tei-card-footer">
+            <div class="tei-meta">
+              <span class="question-count">{{ type.questionCount }} questions</span>
+              <span class="time-estimate">~{{ type.timeEstimate }}min</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Why Choose Our TEI Practice Platform?</h2>
+        <p>Comprehensive preparation tools designed for SHSAT success</p>
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 11l3 3l8-8"></path>
+              <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.48 0 2.87.36 4.1 1"></path>
+            </svg>
+          </div>
+          <h3>Instant Feedback</h3>
+          <p>Get immediate validation and corrections as you work through each question type.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="9" cy="9" r="2"></circle>
+              <path d="M21 15l-3.086-3.086a2 2 0 00-2.828 0L6 21"></path>
+            </svg>
+          </div>
+          <h3>Visual Learning</h3>
+          <p>Interactive diagrams, graphs, and visual elements enhance understanding.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+            </svg>
+          </div>
+          <h3>Adaptive Difficulty</h3>
+          <p>Questions adapt to your skill level, providing appropriate challenge and growth.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </div>
+          <h3>Performance Analytics</h3>
+          <p>Track your progress across all TEI types with detailed performance metrics.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Ready to Master SHSAT TEIs?</h2>
+        <p>Join thousands of students who have improved their SHSAT performance with our platform.</p>
+        <a routerLink="/exam" class="btn btn-primary btn-lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5,3 19,12 5,21 5,3"></polygon>
+          </svg>
+          Begin Your Practice Session
+        </a>
+      </div>
+    </div>
+  </section>
+</div>

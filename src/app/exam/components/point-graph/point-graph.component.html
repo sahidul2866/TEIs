@@ -1,0 +1,122 @@
+<div class="point-graph-container">
+  <!-- Graph Canvas -->
+  <div class="graph-section mb-6">
+    <div class="graph-wrapper bg-white rounded-lg border border-gray-200 p-4">
+      <canvas 
+        #graphCanvas
+        class="graph-canvas border border-gray-300 rounded cursor-crosshair"
+        (click)="onCanvasClick($event)"
+        [style.width.px]="500"
+        [style.height.px]="400">
+      </canvas>
+    </div>
+  </div>
+
+  <!-- Manual Point Entry -->
+  <div class="manual-entry mb-6 bg-gray-50 p-4 rounded-lg">
+    <h3 class="text-lg font-semibold text-gray-800 mb-3">Add Point Manually:</h3>
+    <div class="flex items-center space-x-4">
+      <div class="coordinate-input">
+        <label class="block text-sm font-medium text-gray-700 mb-1">X:</label>
+        <input 
+          type="number"
+          #xInput
+          class="w-20 px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
+          [min]="question.graphData?.xMin || -10"
+          [max]="question.graphData?.xMax || 10">
+      </div>
+      <div class="coordinate-input">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Y:</label>
+        <input 
+          type="number"
+          #yInput
+          class="w-20 px-3 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors"
+          [min]="question.graphData?.yMin || -10"
+          [max]="question.graphData?.yMax || 10">
+      </div>
+      <button 
+        (click)="addPointManually(+xInput.value, +yInput.value); xInput.value = ''; yInput.value = ''"
+        class="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
+        <i class="fas fa-plus mr-2"></i>
+        Add Point
+      </button>
+    </div>
+  </div>
+
+  <!-- Points List -->
+  <div class="points-list mb-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold text-gray-800">Plotted Points:</h3>
+      <div class="points-info text-sm text-gray-600">
+        {{ getPointsCount() }} point{{ getPointsCount() !== 1 ? 's' : '' }} plotted
+        <span *ngIf="getRequiredPointsCount() > 0">
+          ({{ getRequiredPointsCount() }} required)
+        </span>
+      </div>
+    </div>
+    
+    <div *ngIf="userAnswer.length > 0" class="points-grid grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div *ngFor="let point of userAnswer; let i = index" 
+           class="point-item bg-white p-3 rounded border border-blue-200 flex items-center justify-between">
+        <span class="point-coords text-blue-600 font-medium">
+          ({{ point.x }}, {{ point.y }})
+        </span>
+        <button 
+          (click)="removePoint(i)"
+          class="remove-point text-red-500 hover:text-red-700 transition-colors">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div *ngIf="userAnswer.length === 0" class="no-points text-gray-500 italic text-center py-8">
+      No points plotted. Click on the graph or use manual entry.
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls mb-6 flex justify-between items-center bg-gray-50 p-4 rounded-lg">
+    <div class="control-info">
+      <p class="text-sm text-gray-600">
+        Click on the graph to plot points, or use the manual entry above.
+      </p>
+    </div>
+    <button 
+      (click)="clearAllPoints()"
+      [disabled]="userAnswer.length === 0"
+      class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+      <i class="fas fa-trash mr-2"></i>
+      Clear All
+    </button>
+  </div>
+
+  <!-- Graph Info -->
+  <div class="graph-info mb-6 p-4 bg-blue-50 rounded-lg">
+    <h3 class="text-lg font-semibold text-blue-800 mb-2">Graph Information:</h3>
+    <div class="info-grid grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+      <div class="info-item">
+        <span class="font-medium text-blue-700">X Range:</span>
+        <span class="text-blue-600">{{ question.graphData?.xMin }} to {{ question.graphData?.xMax }}</span>
+      </div>
+      <div class="info-item">
+        <span class="font-medium text-blue-700">Y Range:</span>
+        <span class="text-blue-600">{{ question.graphData?.yMin }} to {{ question.graphData?.yMax }}</span>
+      </div>
+      <div class="info-item">
+        <span class="font-medium text-blue-700">Grid Size:</span>
+        <span class="text-blue-600">{{ question.graphData?.gridSize || 1 }}</span>
+      </div>
+      <div class="info-item">
+        <span class="font-medium text-blue-700">Points:</span>
+        <span class="text-blue-600">{{ getPointsCount() }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="instructions bg-purple-50 p-4 rounded-lg">
+    <i class="fas fa-chart-line text-purple-600 mr-2"></i>
+    <span class="text-purple-800">Click on the coordinate plane to plot points, or enter coordinates manually above. Click on existing points to remove them.</span>
+  </div>
+</div>
+
