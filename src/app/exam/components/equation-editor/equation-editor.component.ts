@@ -125,6 +125,8 @@ export class EquationEditorComponent implements OnInit, OnDestroy {
     this.currentEquation = before + symbol + after;
     this.cursorPosition += symbol.length;
     
+    // Update the answer immediately
+    this.updateAnswer();
     this.updateCursorPosition();
     this.validateEquation();
     this.scheduleAutoSave();

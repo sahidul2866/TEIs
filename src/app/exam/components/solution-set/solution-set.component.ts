@@ -42,6 +42,75 @@ export class SolutionSetComponent implements OnInit {
     this.answerChange.emit(solution);
   }
 
+  // Graph visualization methods
+  getTickMarks(): number[] {
+    return [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];
+  }
+
+  getTickPosition(value: number): number {
+    // Map value to SVG x coordinate (50 to 450)
+    const range = 400; // 450 - 50
+    const scale = range / 10; // 10 units from -5 to 5
+    return 50 + (value + 5) * scale;
+  }
+
+  getSolutionType(): string {
+    const answer = this.getCurrentAnswer();
+    if (!answer) return '';
+    
+    if (answer.includes('>') && !answer.includes('=')) return 'greater';
+    if (answer.includes('<') && !answer.includes('=')) return 'less';
+    if (answer.includes('≥') || answer.includes('>=')) return 'greater';
+    if (answer.includes('≤') || answer.includes('<=')) return 'less';
+    if (answer.includes('=') && !answer.includes('>') && !answer.includes('<')) return 'equal';
+    if (answer.includes('<') && answer.includes('<')) return 'between';
+    
+    return '';
+  }
+
+  getSolutionStartX(): number {
+    const answer = this.getCurrentAnswer();
+    if (!answer) return 0;
+    
+    // Extract the number from the inequality
+    const numbers = answer.match(/-?\d+\.?\d*/g);
+    if (numbers && numbers.length > 0) {
+      const value = parseFloat(numbers[0]);
+      return this.getTickPosition(value);
+    }
+    return 0;
+  }
+
+  getSolutionEndX(): number {
+    const answer = this.getCurrentAnswer();
+    if (!answer) return 0;
+    
+    // For between cases like "-1 < x < 5"
+    const numbers = answer.match(/-?\d+\.?\d*/g);
+    if (numbers && numbers.length > 1) {
+      const value = parseFloat(numbers[1]);
+      return this.getTickPosition(value);
+    }
+    return 0;
+  }
+
+  isInclusiveStart(): boolean {
+    const answer = this.getCurrentAnswer();
+    return answer.includes('≥') || answer.includes('≤') || answer.includes('=');
+  }
+
+  getArrowPoints(direction: string): string {
+    if (direction === 'right') {
+      return "440,35 450,40 440,45";
+    } else {
+      return "60,35 50,40 60,45";
+    }
+  }
+
+  getCurrentAnswer(): string {
+    return this.useCustomInput ? this.customSolution : this.selectedSolution;
+  }
+
   toggleCustomInput(): void {
     this.useCustomInput = !this.useCustomInput;
     if (this.useCustomInput) {
@@ -60,10 +129,6 @@ export class SolutionSetComponent implements OnInit {
 
   getEquation(): string {
     return this.question.solutionData?.equation || '';
-  }
-
-  getCurrentAnswer(): string {
-    return this.useCustomInput ? this.customSolution : this.selectedSolution;
   }
 
   hasValidAnswer(): boolean {

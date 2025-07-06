@@ -1,11 +1,79 @@
 <div class="solution-set-container">
+  <!-- Try It! Header -->
+  <div class="try-it-header">
+    <span class="location-pin">📍</span>
+    <span class="try-it-text">Try It!</span>
+  </div>
+
+  <!-- Instructions -->
+  <div class="instructions">
+    <p>{{ question.instruction }}</p>
+  </div>
+
   <!-- Equation Display -->
-  <div class="equation-display mb-6 p-6 bg-white rounded-lg border border-gray-200">
-    <h3 class="text-lg font-semibold text-gray-800 mb-4">Equation/Inequality:</h3>
-    <div class="equation-content text-center">
-      <div class="equation-text text-2xl font-mono text-blue-600 bg-blue-50 p-4 rounded-lg border border-blue-200">
-        {{ getEquation() }}
-      </div>
+  <div class="equation-display">
+    <h3 class="equation-title">Solve the inequality:</h3>
+    <div class="equation-content">
+      <div class="equation-text">{{ getEquation() }}</div>
+    </div>
+  </div>
+
+  <!-- Graph Visualization -->
+  <div class="graph-container">
+    <h4 class="graph-title">Solution on Number Line:</h4>
+    <div class="number-line-container">
+      <svg width="100%" height="80" viewBox="0 0 500 80" class="number-line-svg">
+        <!-- Number line -->
+        <line x1="50" y1="40" x2="450" y2="40" stroke="#333" stroke-width="2"/>
+        
+        <!-- Tick marks and numbers -->
+        <g *ngFor="let tick of getTickMarks(); let i = index">
+          <line [attr.x1]="getTickPosition(tick)" [attr.x2]="getTickPosition(tick)" 
+                y1="35" y2="45" stroke="#333" stroke-width="1"/>
+          <text [attr.x]="getTickPosition(tick)" y="60" text-anchor="middle" class="tick-label">
+            {{ tick }}
+          </text>
+        </g>
+        
+        <!-- Solution visualization -->
+        <g *ngIf="getCurrentAnswer()">
+          <!-- Solution line/ray -->
+          <line *ngIf="getSolutionType() === 'greater'" 
+                [attr.x1]="getSolutionStartX()" [attr.x2]="450" 
+                y1="40" y2="40" stroke="#28a745" stroke-width="4"/>
+          
+          <line *ngIf="getSolutionType() === 'less'" 
+                [attr.x1]="50" [attr.x2]="getSolutionStartX()" 
+                y1="40" y2="40" stroke="#28a745" stroke-width="4"/>
+          
+          <line *ngIf="getSolutionType() === 'between'" 
+                [attr.x1]="getSolutionStartX()" [attr.x2]="getSolutionEndX()" 
+                y1="40" y2="40" stroke="#28a745" stroke-width="4"/>
+          
+          <!-- Solution point(s) -->
+          <circle *ngIf="getSolutionType() === 'equal'" 
+                  [attr.cx]="getSolutionStartX()" cy="40" r="4" 
+                  fill="#28a745" stroke="#fff" stroke-width="2"/>
+          
+          <!-- Open/closed circles for inequalities -->
+          <circle *ngIf="isInclusiveStart()" 
+                  [attr.cx]="getSolutionStartX()" cy="40" r="4" 
+                  fill="#28a745" stroke="#fff" stroke-width="2"/>
+          
+          <circle *ngIf="!isInclusiveStart() && getSolutionType() !== 'equal'" 
+                  [attr.cx]="getSolutionStartX()" cy="40" r="4" 
+                  fill="white" stroke="#28a745" stroke-width="2"/>
+          
+          <!-- Arrow indicators -->
+          <polygon *ngIf="getSolutionType() === 'greater'" 
+                   [attr.points]="getArrowPoints('right')" 
+                   fill="#28a745"/>
+          
+          <polygon *ngIf="getSolutionType() === 'less'" 
+                   [attr.points]="getArrowPoints('left')" 
+                   fill="#28a745"/>
+        </g>
+      </svg>
     </div>
   </div>
 
