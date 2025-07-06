@@ -57,14 +57,14 @@ export class QuestionService {
         content: 'Look at the diagram of a plant cell and identify the different organelles.',
         points: 2,
         hotSpots: [
-          { id: 'nucleus', x: 45, y: 45, width: 15, height: 15, shape: 'circle', correct: true },
-          { id: 'chloroplast1', x: 25, y: 30, width: 12, height: 8, shape: 'rectangle', correct: true },
-          { id: 'chloroplast2', x: 70, y: 25, width: 12, height: 8, shape: 'rectangle', correct: true },
-          { id: 'chloroplast3', x: 80, y: 50, width: 12, height: 8, shape: 'rectangle', correct: true },
-          { id: 'vacuole', x: 60, y: 60, width: 20, height: 20, shape: 'circle', correct: true },
-          { id: 'cell-wall', x: 10, y: 10, width: 85, height: 85, shape: 'rectangle', correct: true }
+          { id: 'nucleus', x: 42, y: 35, width: 16, height: 16, shape: 'circle', correct: true },
+          { id: 'chloroplast1', x: 25, y: 20, width: 10, height: 6, shape: 'rectangle', correct: true },
+          { id: 'chloroplast2', x: 65, y: 18, width: 10, height: 6, shape: 'rectangle', correct: true },
+          { id: 'chloroplast3', x: 72, y: 42, width: 10, height: 6, shape: 'rectangle', correct: true },
+          { id: 'vacuole', x: 60, y: 55, width: 18, height: 18, shape: 'circle', correct: true },
+          { id: 'mitochondria', x: 32, y: 58, width: 8, height: 4, shape: 'rectangle', correct: true }
         ],
-        correctAnswer: ['nucleus', 'chloroplast1', 'chloroplast2', 'chloroplast3', 'vacuole', 'cell-wall']
+        correctAnswer: ['nucleus', 'chloroplast1', 'chloroplast2', 'chloroplast3', 'vacuole', 'mitochondria']
       },
       {
         id: 'q4',
