@@ -44,7 +44,7 @@ export class ExamComponent implements OnInit {
       return this.answers.get(this.currentQuestion.id);
     }
     return null;
-  }
+  }//test
 
   previousQuestion(): void {
     if (this.currentIndex > 0) {
