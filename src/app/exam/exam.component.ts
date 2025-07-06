@@ -13,6 +13,7 @@ export class ExamComponent implements OnInit {
   currentIndex = 0;
   answers: Map<string, any> = new Map();
   showResults = false;
+  showAnswers = false;
   score = 0;
   totalPoints = 0;
   startTime = Date.now();
@@ -44,7 +45,7 @@ export class ExamComponent implements OnInit {
       return this.answers.get(this.currentQuestion.id);
     }
     return null;
-  }
+  }//test
 
   previousQuestion(): void {
     if (this.currentIndex > 0) {

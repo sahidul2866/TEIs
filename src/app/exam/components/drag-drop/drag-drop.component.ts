@@ -19,7 +19,9 @@ interface DragState {
 export class DragDropComponent implements OnInit, OnDestroy {
   @Input() question!: Question;
   @Input() userAnswer: any = {};
+  @Input() showAnswer: boolean = false;
   @Output() answerChange = new EventEmitter<any>();
+  @Output() correctnessChange = new EventEmitter<boolean | undefined>();
 
   public dragState: DragState = {
     isDragging: false,
@@ -51,7 +53,7 @@ export class DragDropComponent implements OnInit, OnDestroy {
       this.question.dropZones?.forEach((zone: any) => {
         this.userAnswer[zone.id] = [];
       });
-      this.answerChange.emit(this.userAnswer);
+      this.updateAnswerAndCorrectness();
     }
   }
 
@@ -280,7 +282,7 @@ export class DragDropComponent implements OnInit, OnDestroy {
     }
     this.userAnswer[targetZoneId].push(item.id);
     
-    this.answerChange.emit(this.userAnswer);
+    this.updateAnswerAndCorrectness();
     
     const targetZone = this.question.dropZones?.find(zone => zone.id === targetZoneId);
     this.announceToScreenReader(`Dropped ${item.content} in ${targetZone?.label || targetZoneId}`);
@@ -290,11 +292,22 @@ export class DragDropComponent implements OnInit, OnDestroy {
     const index = this.userAnswer[zoneId].indexOf(itemId);
     if (index > -1) {
       this.userAnswer[zoneId].splice(index, 1);
-      this.answerChange.emit(this.userAnswer);
+      this.updateAnswerAndCorrectness();
       
       const item = this.findItemById(itemId);
       const zone = this.question.dropZones?.find(z => z.id === zoneId);
       this.announceToScreenReader(`Removed ${item?.content || 'item'} from ${zone?.label || zoneId}`);
+    }
+  }
+
+  onDroppedItemKeyDown(event: KeyboardEvent, zoneId: string, itemId: string): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.removeFromZone(zoneId, itemId);
+    }
+    if (event.key === 'Delete' || event.key === 'Backspace') {
+      event.preventDefault();
+      this.removeFromZone(zoneId, itemId);
     }
   }
 
@@ -387,5 +400,125 @@ export class DragDropComponent implements OnInit, OnDestroy {
     if (itemCount === 0) return 'empty';
     if (itemCount === 1) return 'has-one';
     return 'has-multiple';
+  }
+
+  // Correctness Evaluation
+  private evaluateCorrectness(): boolean | undefined {
+    const correctAnswer = this.question.correctAnswer;
+    if (!correctAnswer || typeof correctAnswer !== 'object' || !this.userAnswer) {
+      return undefined;
+    }
+
+    // Check if any items have been placed
+    const hasAnyPlacements = Object.values(this.userAnswer).some((items: any) => 
+      Array.isArray(items) && items.length > 0
+    );
+
+    if (!hasAnyPlacements) {
+      return undefined;
+    }
+
+    // Check if all drop zones have their correct items
+    for (const zoneId of Object.keys(correctAnswer)) {
+      const expectedItems = correctAnswer[zoneId] || [];
+      const placedItems = this.userAnswer[zoneId] || [];
+      
+      // Check if the arrays have the same length and contain the same items
+      if (expectedItems.length !== placedItems.length) {
+        return false;
+      }
+      
+      // Check if all expected items are placed in this zone
+      for (const expectedItem of expectedItems) {
+        if (!placedItems.includes(expectedItem)) {
+          return false;
+        }
+      }
+    }
+
+    // Also check that no extra items are placed in zones not in correct answer
+    for (const zoneId of Object.keys(this.userAnswer)) {
+      if (!(zoneId in correctAnswer)) {
+        const placedItems = this.userAnswer[zoneId] || [];
+        if (placedItems.length > 0) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  private updateAnswerAndCorrectness(): void {
+    this.answerChange.emit(this.userAnswer);
+    const isCorrect = this.evaluateCorrectness();
+    console.log('Drag-drop correctness:', { userAnswer: this.userAnswer, correctAnswer: this.question.correctAnswer, isCorrect });
+    this.correctnessChange.emit(isCorrect);
+  }
+
+  // Visual feedback methods for showAnswer mode
+  getDropZoneClass(zoneId: string): string {
+    if (!this.showAnswer) return '';
+    
+    const correctAnswer = this.question.correctAnswer;
+    if (!correctAnswer || !correctAnswer[zoneId]) return '';
+    
+    const userItems = this.getItemsInZone(zoneId);
+    const correctItems = correctAnswer[zoneId] || [];
+    
+    if (userItems.length === 0) return '';
+    
+    // Check if all items in this zone are correct
+    const allCorrect = userItems.every(item => correctItems.includes(item.id));
+    const hasCorrect = userItems.some(item => correctItems.includes(item.id));
+    
+    if (allCorrect && userItems.length === correctItems.length) {
+      return 'border-green-500 bg-green-50';
+    } else if (hasCorrect) {
+      return 'border-yellow-500 bg-yellow-50';
+    } else {
+      return 'border-red-500 bg-red-50';
+    }
+  }
+
+  getDroppedItemClass(item: any, zoneId: string): string {
+    if (!this.showAnswer) return '';
+    
+    const correctAnswer = this.question.correctAnswer;
+    if (!correctAnswer || !correctAnswer[zoneId]) return '';
+    
+    const correctItems = correctAnswer[zoneId] || [];
+    
+    if (correctItems.includes(item.id)) {
+      return 'bg-green-100 border-green-300 text-green-800';
+    } else {
+      return 'bg-red-100 border-red-300 text-red-800';
+    }
+  }
+
+  shouldShowCorrectAnswer(zoneId: string): boolean {
+    if (!this.showAnswer) return false;
+    
+    const correctAnswer = this.question.correctAnswer;
+    if (!correctAnswer || !correctAnswer[zoneId]) return false;
+    
+    const userItems = this.getItemsInZone(zoneId);
+    const correctItems = correctAnswer[zoneId] || [];
+    
+    // Show correct answer if zone is empty or has wrong items
+    return userItems.length === 0 || !correctItems.every((id: string) => userItems.some(item => item.id === id));
+  }
+
+  getCorrectAnswerText(zoneId: string): string {
+    const correctAnswer = this.question.correctAnswer;
+    if (!correctAnswer || !correctAnswer[zoneId]) return '';
+    
+    const correctItems = correctAnswer[zoneId] || [];
+    const correctItemsText = correctItems.map((id: string) => {
+      const item = this.findItemById(id);
+      return item ? item.content : id;
+    });
+    
+    return `Correct: ${correctItemsText.join(', ')}`;
   }
 }

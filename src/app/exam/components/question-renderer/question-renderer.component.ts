@@ -10,7 +10,11 @@ import { Question } from '../../../models/question';
 export class QuestionRendererComponent implements OnInit {
   @Input() question!: Question;
   @Input() userAnswer: any = null;
+  @Input() showAnswer: boolean = false; // Show answer flag for visual feedback
   @Output() answerChange = new EventEmitter<any>();
+  @Output() correctnessChange = new EventEmitter<boolean | undefined>();
+
+  currentIsCorrect: boolean | undefined = undefined;
 
   ngOnInit(): void {
     // Initialize answer if not provided
@@ -54,5 +58,10 @@ export class QuestionRendererComponent implements OnInit {
   onAnswerUpdate(answer: any): void {
     this.userAnswer = answer;
     this.answerChange.emit(answer);
+  }
+
+  onCorrectnessUpdate(isCorrect: boolean | undefined): void {
+    this.currentIsCorrect = isCorrect;
+    this.correctnessChange.emit(isCorrect);
   }
 }

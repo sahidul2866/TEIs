@@ -10,12 +10,14 @@ import { Question } from '../../../models/question';
 export class HotTextComponent implements OnInit {
   @Input() question!: Question;
   @Input() userAnswer: string[] = [];
+  @Input() showAnswer: boolean = false;
   @Output() answerChange = new EventEmitter<string[]>();
+  @Output() correctnessChange = new EventEmitter<boolean | undefined>();
 
   ngOnInit(): void {
     if (!this.userAnswer) {
       this.userAnswer = [];
-      this.answerChange.emit(this.userAnswer);
+      this.updateAnswerAndCorrectness();
     }
   }
 
@@ -32,7 +34,7 @@ export class HotTextComponent implements OnInit {
         this.userAnswer.push(textId);
       }
       
-      this.answerChange.emit(this.userAnswer);
+      this.updateAnswerAndCorrectness();
     }
   }
 
@@ -82,6 +84,55 @@ export class HotTextComponent implements OnInit {
     const total = this.question.choiceData?.length || 0;
     if (total === 0) return 0;
     return (this.getCompletedChoices() / total) * 100;
+  }
+
+  // Correctness Evaluation
+  private evaluateCorrectness(): boolean | undefined {
+    if (!this.question.hotTexts || !this.userAnswer) {
+      return undefined;
+    }
+
+    // Check if any selections have been made
+    if (this.userAnswer.length === 0) {
+      return undefined;
+    }
+
+    // Get all correct hot text IDs
+    const correctIds = this.question.hotTexts
+      .filter(ht => ht.correct)
+      .map(ht => ht.id);
+
+    // Check if user selections match exactly with correct answers
+    if (this.userAnswer.length !== correctIds.length) {
+      return false;
+    }
+
+    return this.userAnswer.every(id => correctIds.includes(id));
+  }
+
+  private updateAnswerAndCorrectness(): void {
+    this.answerChange.emit(this.userAnswer);
+    const isCorrect = this.evaluateCorrectness();
+    console.log('Hot-text correctness:', { userAnswer: this.userAnswer, hotTexts: this.question.hotTexts, isCorrect });
+    this.correctnessChange.emit(isCorrect);
+  }
+
+  // Visual feedback methods for showAnswer mode
+  getHotTextClass(hotText: any): string {
+    if (!this.showAnswer) return '';
+    
+    const isSelected = this.isSelected(hotText.id);
+    const isCorrect = hotText.correct;
+    
+    if (isSelected && isCorrect) {
+      return 'bg-green-100 border-green-500 text-green-800';
+    } else if (isSelected && !isCorrect) {
+      return 'bg-red-100 border-red-500 text-red-800';
+    } else if (!isSelected && isCorrect) {
+      return 'bg-green-50 border-green-300 text-green-600 border-dashed';
+    }
+    
+    return '';
   }
 }
 

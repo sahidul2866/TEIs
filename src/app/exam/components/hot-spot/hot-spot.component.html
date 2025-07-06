@@ -15,29 +15,100 @@
     <p>{{ question.content }}</p>
   </div>
 
-  <!-- Hot Spots Grid -->
-  <div class="hot-spots-container">
-    <div class="hot-spots-grid">
+  <!-- Plant Cell Diagram -->
+  <div class="cell-diagram-container">
+    <div class="cell-diagram">
+      <!-- Plant Cell SVG -->
+      <svg width="100%" height="100%" viewBox="0 0 400 300" class="cell-svg">
+        <!-- Cell Wall (outermost) -->
+        <rect x="20" y="20" width="360" height="260" 
+              fill="none" stroke="#2d5016" stroke-width="4" rx="5" />
+        
+        <!-- Cell Membrane (inside cell wall) -->
+        <rect x="30" y="30" width="340" height="240" 
+              fill="rgba(240, 255, 240, 0.3)" stroke="#4a7c59" stroke-width="2" rx="3" />
+        
+        <!-- Nucleus (large, central) -->
+        <circle cx="200" cy="140" r="30" fill="#ffeb3b" stroke="#f57f17" stroke-width="2"/>
+        <circle cx="200" cy="140" r="8" fill="#e65100" stroke="#d84315" stroke-width="1"/>
+        <text x="200" y="190" text-anchor="middle" class="label-text">Nucleus</text>
+        
+        <!-- Chloroplasts (green, oval shaped) -->
+        <ellipse cx="120" cy="80" rx="20" ry="12" fill="#4caf50" stroke="#2e7d32" stroke-width="2"/>
+        <ellipse cx="280" cy="70" rx="20" ry="12" fill="#4caf50" stroke="#2e7d32" stroke-width="2"/>
+        <ellipse cx="310" cy="140" rx="20" ry="12" fill="#4caf50" stroke="#2e7d32" stroke-width="2"/>
+        <ellipse cx="90" cy="200" rx="20" ry="12" fill="#4caf50" stroke="#2e7d32" stroke-width="2"/>
+        <ellipse cx="320" cy="220" rx="20" ry="12" fill="#4caf50" stroke="#2e7d32" stroke-width="2"/>
+        
+        <!-- Vacuole (large, clear area) -->
+        <circle cx="260" cy="200" r="35" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+        <text x="260" y="250" text-anchor="middle" class="label-text">Vacuole</text>
+        
+        <!-- Mitochondria (rod-shaped) -->
+        <ellipse cx="150" cy="200" rx="15" ry="8" fill="#ff7043" stroke="#d84315" stroke-width="2"/>
+        <ellipse cx="300" cy="100" rx="15" ry="8" fill="#ff7043" stroke="#d84315" stroke-width="2"/>
+        
+        <!-- Endoplasmic Reticulum (wavy lines) -->
+        <path d="M 80 120 Q 100 115 120 120 Q 140 125 160 120" 
+              fill="none" stroke="#9c27b0" stroke-width="2"/>
+        <path d="M 80 130 Q 100 125 120 130 Q 140 135 160 130" 
+              fill="none" stroke="#9c27b0" stroke-width="2"/>
+        
+        <!-- Labels -->
+        <text x="120" y="105" text-anchor="middle" class="label-text">Chloroplast</text>
+        <text x="200" y="15" text-anchor="middle" class="title-text">Plant Cell</text>
+      </svg>
+      
+      <!-- Interactive Hot Spots -->
       <div 
         *ngFor="let hotSpot of question.hotSpots"
-        class="hot-spot-item"
+        class="hot-spot-overlay"
+        [style.left.%]="hotSpot.x"
+        [style.top.%]="hotSpot.y"
+        [style.width.%]="hotSpot.width"
+        [style.height.%]="hotSpot.height"
         [class.selected]="isSelected(hotSpot.id)"
-        [ngStyle]="getHotSpotStyle(hotSpot)"
+        [ngClass]="getHotSpotClass(hotSpot)"
         (click)="onHotSpotClick(hotSpot.id)"
-        [attr.aria-label]="'Hot spot: ' + hotSpot.id"
+        [attr.aria-label]="'Click to select ' + hotSpot.id"
         [attr.aria-pressed]="isSelected(hotSpot.id)"
         tabindex="0"
         role="button">
-        
-        <!-- Shape content or selection indicator -->
-        <div class="shape-content" [ngClass]="'shape-' + hotSpot.shape">
-          <!-- Shape is rendered via CSS based on hotSpot.shape -->
-        </div>
         
         <!-- Selection indicator -->
         <div *ngIf="isSelected(hotSpot.id)" class="selection-indicator">
           <div class="checkmark">✓</div>
         </div>
+        
+        <!-- Correct indicator when showAnswer is enabled -->
+        <div *ngIf="shouldShowCorrectIndicator(hotSpot)" 
+             class="correct-indicator bg-green-500 text-white rounded-full text-xs px-1 py-0.5 absolute -top-2 -right-2">
+          ✓
+        </div>
+        
+        <!-- Incorrect indicator when showAnswer is enabled -->
+        <div *ngIf="shouldShowIncorrectIndicator(hotSpot)" 
+             class="incorrect-indicator bg-red-500 text-white rounded-full text-xs px-1 py-0.5 absolute -top-2 -right-2">
+          ✗
+        </div>
+        
+        <!-- Hover label -->
+        <div class="hover-label">{{ hotSpot.id }}</div>
+      </div>
+    </div>
+    
+    <!-- Selection Status -->
+    <div class="selection-status">
+      <h4>Selected Parts:</h4>
+      <div *ngIf="userAnswer.length > 0" class="selected-parts">
+        <span 
+          *ngFor="let selectedId of userAnswer"
+          class="selected-part-tag">
+          {{ selectedId }}
+        </span>
+      </div>
+      <div *ngIf="userAnswer.length === 0" class="no-selection">
+        No parts selected
       </div>
     </div>
   </div>

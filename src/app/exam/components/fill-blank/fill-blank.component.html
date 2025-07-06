@@ -22,8 +22,16 @@
             (ngModelChange)="onInputChange(blankPositions[i], $event)"
             [placeholder]="getBlankPlaceholder(blankPositions[i])"
             class="blank-input"
+            [ngClass]="getInputClass(blankPositions[i])"
             [attr.aria-label]="'Blank ' + (i + 1)"
             [style.width]="getInputWidth(blankPositions[i])">
+          
+          <!-- Show correct answer if enabled and wrong -->
+          <div *ngIf="shouldShowCorrectAnswer(blankPositions[i])" 
+               class="correct-answer-hint text-xs mt-1 p-1 bg-green-100 border border-green-300 rounded text-green-800">
+            <i class="fas fa-lightbulb mr-1"></i>
+            Correct: {{ getCorrectAnswerText(blankPositions[i]) }}
+          </div>
         </span>
       </span>
     </div>

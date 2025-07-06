@@ -10,7 +10,9 @@ import { Question } from '../../../models/question';
 export class InlineChoiceComponent implements OnInit {
   @Input() question!: Question;
   @Input() userAnswer: number[] = [];
+  @Input() showAnswer: boolean = false;
   @Output() answerChange = new EventEmitter<number[]>();
+  @Output() correctnessChange = new EventEmitter<boolean | undefined>();
 
   contentParts: string[] = [];
   choicePositions: number[] = [];
@@ -19,7 +21,7 @@ export class InlineChoiceComponent implements OnInit {
     this.parseContent();
     if (!this.userAnswer || this.userAnswer.length === 0) {
       this.userAnswer = new Array(this.question.choiceData?.length || 0).fill(-1);
-      this.answerChange.emit(this.userAnswer);
+      this.updateAnswerAndCorrectness();
     }
   }
 
@@ -41,7 +43,7 @@ export class InlineChoiceComponent implements OnInit {
 
   onChoiceChange(choiceIndex: number, selectedOptionIndex: number): void {
     this.userAnswer[choiceIndex] = selectedOptionIndex;
-    this.answerChange.emit(this.userAnswer);
+    this.updateAnswerAndCorrectness();
   }
 
   getChoiceOptions(choiceIndex: number): string[] {
@@ -68,6 +70,70 @@ export class InlineChoiceComponent implements OnInit {
     const total = this.question.choiceData?.length || 0;
     if (total === 0) return 0;
     return (this.getCompletedChoices() / total) * 100;
+  }
+
+  // Correctness Evaluation
+  private evaluateCorrectness(): boolean | undefined {
+    if (!this.question.choiceData || !this.userAnswer) {
+      return undefined;
+    }
+
+    // Check if any choices have been made
+    const hasAnyChoices = this.userAnswer.some(answer => answer >= 0);
+    if (!hasAnyChoices) {
+      return undefined;
+    }
+
+    // Check if all choices are correctly selected
+    for (let i = 0; i < this.question.choiceData.length; i++) {
+      const userChoice = this.userAnswer[i];
+      const correctChoice = this.question.choiceData[i].correctIndex;
+      
+      if (userChoice !== correctChoice) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  private updateAnswerAndCorrectness(): void {
+    this.answerChange.emit(this.userAnswer);
+    const isCorrect = this.evaluateCorrectness();
+    this.correctnessChange.emit(isCorrect);
+  }
+
+  // Visual feedback methods for showAnswer mode
+  getSelectClass(choiceIndex: number): string {
+    if (!this.showAnswer) return '';
+    
+    const userSelection = this.userAnswer[choiceIndex];
+    const correctSelection = this.question.choiceData?.[choiceIndex]?.correctIndex;
+    
+    if (userSelection === undefined || correctSelection === undefined) return '';
+    
+    if (userSelection === correctSelection) {
+      return 'border-green-500 bg-green-50 text-green-800';
+    } else {
+      return 'border-red-500 bg-red-50 text-red-800';
+    }
+  }
+
+  shouldShowCorrectAnswer(choiceIndex: number): boolean {
+    if (!this.showAnswer) return false;
+    
+    const userSelection = this.userAnswer[choiceIndex];
+    const correctSelection = this.question.choiceData?.[choiceIndex]?.correctIndex;
+    
+    return userSelection !== correctSelection;
+  }
+
+  getCorrectAnswerText(choiceIndex: number): string {
+    const correctIndex = this.question.choiceData?.[choiceIndex]?.correctIndex;
+    if (correctIndex === undefined) return '';
+    
+    const options = this.question.choiceData?.[choiceIndex]?.options || [];
+    return options[correctIndex] || '';
   }
 }
 

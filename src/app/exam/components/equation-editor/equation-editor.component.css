@@ -128,41 +128,46 @@
 .symbol-palette {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
 }
 
-.number-section,
-.operator-section,
-.special-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(45px, 1fr));
+.palette-row {
+  display: flex;
+  flex-direction: column;
   gap: 8px;
-  max-width: 100%;
 }
 
-.number-section {
-  grid-template-columns: repeat(10, 1fr);
+.section-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #495057;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
 }
 
-.operator-section {
-  grid-template-columns: repeat(8, 1fr);
-}
-
-.special-section {
-  grid-template-columns: repeat(6, 1fr);
+.buttons-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .symbol-btn {
-  padding: 12px 8px;
+  padding: 8px 12px;
   border: 1px solid #6c757d;
   border-radius: 4px;
   background-color: white;
   color: #2c3e50;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
-  min-height: 45px;
+  min-height: 36px;
+  min-width: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -171,34 +176,71 @@
 .symbol-btn:hover {
   background-color: #e9ecef;
   border-color: #007bff;
+  transform: translateY(-1px);
 }
 
 .symbol-btn:active {
   background-color: #d4edda;
   border-color: #28a745;
+  transform: translateY(0);
 }
 
 .number-btn {
-  background-color: #f8f9fa;
+  background-color: #e3f2fd;
+  color: #1565c0;
   font-weight: 600;
 }
 
+.number-btn:hover {
+  background-color: #bbdefb;
+}
+
 .operator-btn {
-  background-color: #fff3cd;
-  color: #856404;
+  background-color: #fff3e0;
+  color: #e65100;
 }
 
 .operator-btn:hover {
-  background-color: #ffeaa7;
+  background-color: #ffe0b2;
+}
+
+.variable-btn {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+  font-style: italic;
+}
+
+.variable-btn:hover {
+  background-color: #e1bee7;
 }
 
 .special-btn {
-  background-color: #e1ecf4;
-  color: #0c5460;
+  background-color: #e8f5e8;
+  color: #2e7d32;
 }
 
 .special-btn:hover {
-  background-color: #bee5eb;
+  background-color: #c8e6c9;
+}
+
+.function-btn {
+  background-color: #fce4ec;
+  color: #c2185b;
+  font-family: 'Courier New', monospace;
+}
+
+.function-btn:hover {
+  background-color: #f8bbd9;
+}
+
+.bracket-btn {
+  background-color: #fff8e1;
+  color: #f57c00;
+  font-weight: bold;
+}
+
+.bracket-btn:hover {
+  background-color: #ffecb3;
 }
 
 /* Responsive design */
@@ -216,30 +258,33 @@
   }
   
   .action-buttons {
-    gap: 6px;
+    gap: 4px;
   }
   
   .action-btn {
-    min-width: 35px;
-    height: 32px;
-    padding: 6px 8px;
+    min-width: 32px;
+    height: 30px;
+    padding: 4px 6px;
     font-size: 12px;
   }
   
+  .symbol-palette {
+    padding: 10px;
+    gap: 10px;
+  }
+  
+  .buttons-row {
+    gap: 4px;
+  }
+  
   .symbol-btn {
-    min-height: 40px;
-    font-size: 14px;
+    min-height: 32px;
+    min-width: 36px;
+    font-size: 12px;
+    padding: 6px 8px;
   }
   
-  .number-section {
-    grid-template-columns: repeat(5, 1fr);
-  }
-  
-  .operator-section {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  
-  .special-section {
-    grid-template-columns: repeat(3, 1fr);
+  .section-label {
+    font-size: 11px;
   }
 }

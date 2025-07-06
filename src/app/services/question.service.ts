@@ -53,15 +53,18 @@ export class QuestionService {
         id: 'q3',
         type: 'hotspot',
         title: 'Identify Cell Parts',
-        instruction: 'Click on the nucleus of the cell',
-        content: 'Look at the diagram of a plant cell and identify the nucleus.',
+        instruction: 'Click on the cell parts to identify them',
+        content: 'Look at the diagram of a plant cell and identify the different organelles.',
         points: 2,
         hotSpots: [
-          { id: 'nucleus', x: 150, y: 100, width: 40, height: 40, shape: 'circle', correct: true },
-          { id: 'chloroplast', x: 80, y: 80, width: 30, height: 30, shape: 'circle', correct: false },
-          { id: 'vacuole', x: 200, y: 150, width: 50, height: 50, shape: 'circle', correct: false }
+          { id: 'nucleus', x: 42, y: 35, width: 16, height: 16, shape: 'circle', correct: true },
+          { id: 'chloroplast1', x: 25, y: 20, width: 10, height: 6, shape: 'rectangle', correct: true },
+          { id: 'chloroplast2', x: 65, y: 18, width: 10, height: 6, shape: 'rectangle', correct: true },
+          { id: 'chloroplast3', x: 72, y: 42, width: 10, height: 6, shape: 'rectangle', correct: true },
+          { id: 'vacuole', x: 60, y: 55, width: 18, height: 18, shape: 'circle', correct: true },
+          { id: 'mitochondria', x: 32, y: 58, width: 8, height: 4, shape: 'rectangle', correct: true }
         ],
-        correctAnswer: ['nucleus']
+        correctAnswer: ['nucleus', 'chloroplast1', 'chloroplast2', 'chloroplast3', 'vacuole', 'mitochondria']
       },
       {
         id: 'q4',
@@ -212,16 +215,16 @@ export class QuestionService {
       {
         id: 'q12',
         type: 'solutionSet',
-        title: 'Find Solution Set',
-        instruction: 'Determine the solution set for the inequality',
-        content: 'Find the solution set for the inequality: 2x + 3 > 7',
+        title: 'Graph Inequality Solution',
+        instruction: 'Select the regions that represent the solution to the system of inequalities',
+        content: 'Find the solution region for the system: y ≤ 2x + 1 and y ≥ -x + 3',
         solutionData: {
-          equation: '2x + 3 > 7',
-          solutionSet: ['x > 2'],
-          inequalities: ['x > 2', 'x < 2', 'x ≥ 2', 'x ≤ 2']
+          equation: 'y ≤ 2x + 1',
+          inequalities: ['y ≤ 2x + 1', 'y ≥ -x + 3'],
+          solutionSet: ['x ≤ 2', 'x ≥ -1']
         },
-        correctAnswer: 'x > 2',
-        points: 2
+        correctAnswer: ['above_line2', 'below_line1'],
+        points: 3
       }
     ];
   }

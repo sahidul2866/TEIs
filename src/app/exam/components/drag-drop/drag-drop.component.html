@@ -46,6 +46,7 @@
         [attr.data-zone-id]="zone.id"
         [attr.tabindex]="dragState.keyboardMode ? 0 : -1"
         [attr.aria-label]="'Drop zone: ' + zone.label"
+        [ngClass]="getDropZoneClass(zone.id)"
         (dragover)="onDragOver($event)"
         (dragenter)="onDragEnter($event, zone.id)"
         (dragleave)="onDragLeave($event)"
@@ -56,8 +57,21 @@
         <div
           *ngFor="let item of getItemsInZone(zone.id); trackBy: trackByItemId"
           class="dropped-item"
-          [attr.aria-label]="'Dropped item: ' + item.content">
+          [ngClass]="getDroppedItemClass(item, zone.id)"
+          [attr.aria-label]="'Dropped item: ' + item.content + '. Click to remove.'"
+          [attr.tabindex]="0"
+          [attr.role]="'button'"
+          (click)="removeFromZone(zone.id, item.id)"
+          (keydown)="onDroppedItemKeyDown($event, zone.id, item.id)">
           {{ item.content }}
+          <span class="remove-indicator" aria-hidden="true">✕</span>
+        </div>
+        
+        <!-- Show correct answer if enabled and needed -->
+        <div *ngIf="shouldShowCorrectAnswer(zone.id)" 
+             class="correct-answer-hint text-xs p-2 mt-2 bg-green-100 border border-green-300 rounded text-green-800">
+          <i class="fas fa-lightbulb mr-1"></i>
+          {{ getCorrectAnswerText(zone.id) }}
         </div>
       </div>
     </div>

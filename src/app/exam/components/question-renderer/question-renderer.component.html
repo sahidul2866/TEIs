@@ -3,41 +3,69 @@
     <p class="text-lg text-gray-800 leading-relaxed">{{ question.content }}</p>
   </div>
 
+  <!-- Testing UI - clearly marked and removable -->
+  <div class="bg-yellow-100 border-2 border-yellow-400 rounded-lg p-4 mb-6" style="background-color: #fffbeb; border: 2px solid #f59e0b;">
+    <div class="flex items-center justify-between">
+      <span class="text-sm font-semibold text-yellow-800">🧪 TESTING UI (Remove for Production)</span>
+      <span class="text-xs text-yellow-600">isCorrect Status</span>
+    </div>
+    <div class="mt-2 text-lg font-mono">
+      <span class="text-yellow-700">Current Value: </span>
+      <span [ngClass]="{
+        'text-green-600 font-bold': currentIsCorrect === true,
+        'text-red-600 font-bold': currentIsCorrect === false,
+        'text-gray-500 italic': currentIsCorrect === undefined
+      }">
+        {{ currentIsCorrect === true ? 'TRUE' : currentIsCorrect === false ? 'FALSE' : 'UNDEFINED' }}
+      </span>
+    </div>
+  </div>
+
   <!-- Switch on question type -->
   <div [ngSwitch]="question.type">
     <app-drag-drop 
       *ngSwitchCase="'dragDrop'"
       [question]="question"
       [userAnswer]="userAnswer"
-      (answerChange)="onAnswerUpdate($event)">
+      [showAnswer]="showAnswer"
+      (answerChange)="onAnswerUpdate($event)"
+      (correctnessChange)="onCorrectnessUpdate($event)">
     </app-drag-drop>
 
     <app-fill-blank 
       *ngSwitchCase="'fillBlank'"
       [question]="question"
       [userAnswer]="userAnswer"
-      (answerChange)="onAnswerUpdate($event)">
+      [showAnswer]="showAnswer"
+      (answerChange)="onAnswerUpdate($event)"
+      (correctnessChange)="onCorrectnessUpdate($event)">
     </app-fill-blank>
 
     <app-hot-spot 
       *ngSwitchCase="'hotspot'"
       [question]="question"
       [userAnswer]="userAnswer"
-      (answerChange)="onAnswerUpdate($event)">
+      [showAnswer]="showAnswer"
+      (answerChange)="onAnswerUpdate($event)"
+      (correctnessChange)="onCorrectnessUpdate($event)">
     </app-hot-spot>
 
     <app-equation-editor 
       *ngSwitchCase="'equationEditor'"
       [question]="question"
       [userAnswer]="userAnswer"
-      (answerChange)="onAnswerUpdate($event)">
+      [showAnswer]="showAnswer"
+      (answerChange)="onAnswerUpdate($event)"
+      (correctnessChange)="onCorrectnessUpdate($event)">
     </app-equation-editor>
 
     <app-hot-text 
       *ngSwitchCase="'hotText'"
       [question]="question"
       [userAnswer]="userAnswer"
-      (answerChange)="onAnswerUpdate($event)">
+      [showAnswer]="showAnswer"
+      (answerChange)="onAnswerUpdate($event)"
+      (correctnessChange)="onCorrectnessUpdate($event)">
     </app-hot-text>
 
     <app-multiple-choice 
@@ -58,7 +86,9 @@
       *ngSwitchCase="'inlineChoice'"
       [question]="question"
       [userAnswer]="userAnswer"
-      (answerChange)="onAnswerUpdate($event)">
+      [showAnswer]="showAnswer"
+      (answerChange)="onAnswerUpdate($event)"
+      (correctnessChange)="onCorrectnessUpdate($event)">
     </app-inline-choice>
 
     <app-table-grid 
@@ -86,7 +116,9 @@
       *ngSwitchCase="'solutionSet'"
       [question]="question"
       [userAnswer]="userAnswer"
-      (answerChange)="onAnswerUpdate($event)">
+      [showAnswer]="showAnswer"
+      (answerChange)="onAnswerUpdate($event)"
+      (correctnessChange)="onCorrectnessUpdate($event)">
     </app-solution-set>
 
 

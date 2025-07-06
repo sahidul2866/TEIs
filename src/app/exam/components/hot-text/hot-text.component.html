@@ -5,6 +5,7 @@
       <span 
         *ngFor="let hotText of question.hotTexts"
         [class]="getTextClass(hotText.id)"
+        [ngClass]="getHotTextClass(hotText)"
         (click)="onTextClick(hotText.id)"
         [attr.data-selectable]="isSelectable(hotText.id)"
         [attr.data-selected]="isSelected(hotText.id)">

@@ -16,7 +16,9 @@ interface HistoryEntry {
 export class EquationEditorComponent implements OnInit, OnDestroy {
   @Input() question!: Question;
   @Input() userAnswer: string = '';
+  @Input() showAnswer: boolean = false;
   @Output() answerChange = new EventEmitter<string>();
+  @Output() correctnessChange = new EventEmitter<boolean | undefined>();
 
   @ViewChild('equationInput') equationInput!: ElementRef<HTMLTextAreaElement>;
 
@@ -125,6 +127,8 @@ export class EquationEditorComponent implements OnInit, OnDestroy {
     this.currentEquation = before + symbol + after;
     this.cursorPosition += symbol.length;
     
+    // Update the answer immediately
+    this.updateAnswer();
     this.updateCursorPosition();
     this.validateEquation();
     this.scheduleAutoSave();
@@ -369,6 +373,33 @@ export class EquationEditorComponent implements OnInit, OnDestroy {
 
   private updateAnswer(): void {
     this.answerChange.emit(this.currentEquation);
+    this.evaluateCorrectness();
+  }
+
+  private evaluateCorrectness(): boolean | undefined {
+    if (!this.currentEquation.trim()) {
+      this.correctnessChange.emit(undefined);
+      return undefined;
+    }
+
+    const correctEquation = this.question.equationData?.correctEquation || this.question.correctAnswer;
+    if (!correctEquation) {
+      this.correctnessChange.emit(undefined);
+      return undefined;
+    }
+
+    // Normalize equations for comparison by removing extra spaces and standardizing operators
+    const normalize = (eq: string) => {
+      return eq.trim()
+        .replace(/\s+/g, ' ')
+        .replace(/×/g, '*')
+        .replace(/÷/g, '/')
+        .toLowerCase();
+    };
+
+    const isCorrect = normalize(this.currentEquation) === normalize(correctEquation);
+    this.correctnessChange.emit(isCorrect);
+    return isCorrect;
   }
 
   // Accessibility Methods
@@ -388,16 +419,25 @@ export class EquationEditorComponent implements OnInit, OnDestroy {
 
   // Advanced Features
   insertTemplate(template: string): void {
-    // Insert common equation templates
+    // Insert common equation templates and special symbols
     const templates: { [key: string]: string } = {
       'quadratic': 'ax² + bx + c = 0',
       'linear': 'y = mx + b',
       'circle': '(x - h)² + (y - k)² = r²',
-      'distance': 'd = √((x₂ - x₁)² + (y₂ - y₁)²)'
+      'distance': 'd = √((x₂ - x₁)² + (y₂ - y₁)²)',
+      'x²': 'x²',
+      'x³': 'x³', 
+      'xⁿ': 'xⁿ',
+      'x/y': 'x/y',
+      '√x': '√x',
+      '∛x': '∛x'
     };
     
     if (templates[template]) {
       this.insertSymbol(templates[template]);
+    } else {
+      // If not a template, insert as symbol
+      this.insertSymbol(template);
     }
   }
 
@@ -448,5 +488,54 @@ export class EquationEditorComponent implements OnInit, OnDestroy {
       console.error('Failed to import equation:', error);
     }
     return false;
+  }
+
+  // Visual feedback methods for showAnswer mode
+  getEditorClass(): string {
+    if (!this.showAnswer) return '';
+    
+    const currentEquation = this.currentEquation.trim();
+    const correctEquation = this.question.equationData?.correctEquation?.trim() || this.question.correctAnswer?.trim() || '';
+    
+    if (!currentEquation) return '';
+    
+    // Normalize equations for comparison
+    const normalize = (eq: string) => {
+      return eq.trim()
+        .replace(/\s+/g, ' ')
+        .replace(/×/g, '*')
+        .replace(/÷/g, '/')
+        .toLowerCase();
+    };
+    
+    if (normalize(currentEquation) === normalize(correctEquation)) {
+      return 'border-green-500 bg-green-50';
+    } else {
+      return 'border-red-500 bg-red-50';
+    }
+  }
+
+  shouldShowCorrectAnswer(): boolean {
+    if (!this.showAnswer) return false;
+    
+    const currentEquation = this.currentEquation.trim();
+    const correctEquation = this.question.equationData?.correctEquation?.trim() || this.question.correctAnswer?.trim() || '';
+    
+    if (!currentEquation || !correctEquation) return false;
+    
+    // Normalize equations for comparison
+    const normalize = (eq: string) => {
+      return eq.trim()
+        .replace(/\s+/g, ' ')
+        .replace(/×/g, '*')
+        .replace(/÷/g, '/')
+        .toLowerCase();
+    };
+    
+    return normalize(currentEquation) !== normalize(correctEquation);
+  }
+
+  getCorrectAnswerText(): string {
+    return this.question.equationData?.correctEquation || this.question.correctAnswer || '';
   }
 }

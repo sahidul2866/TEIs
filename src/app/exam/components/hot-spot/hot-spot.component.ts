@@ -10,12 +10,14 @@ import { Question } from '../../../models/question';
 export class HotSpotComponent implements OnInit {
   @Input() question!: Question;
   @Input() userAnswer: string[] = [];
+  @Input() showAnswer: boolean = false;
   @Output() answerChange = new EventEmitter<string[]>();
+  @Output() correctnessChange = new EventEmitter<boolean | undefined>();
 
   ngOnInit(): void {
     if (!this.userAnswer) {
       this.userAnswer = [];
-      this.answerChange.emit(this.userAnswer);
+      this.updateAnswerAndCorrectness();
     }
   }
 
@@ -30,7 +32,7 @@ export class HotSpotComponent implements OnInit {
       this.userAnswer.push(hotSpotId);
     }
     
-    this.answerChange.emit(this.userAnswer);
+    this.updateAnswerAndCorrectness();
   }
 
   isSelected(hotSpotId: string): boolean {
@@ -62,5 +64,63 @@ export class HotSpotComponent implements OnInit {
         border: this.isSelected(hotSpot.id) ? '2px solid #3b82f6' : '2px solid transparent'
       };
     }
+  }
+
+  // Correctness Evaluation
+  private evaluateCorrectness(): boolean | undefined {
+    if (!this.question.hotSpots || !this.userAnswer) {
+      return undefined;
+    }
+
+    // Check if any selections have been made
+    if (this.userAnswer.length === 0) {
+      return undefined;
+    }
+
+    // Get all correct hot spot IDs
+    const correctIds = this.question.hotSpots
+      .filter(hs => hs.correct)
+      .map(hs => hs.id);
+
+    // Check if user selections match exactly with correct answers
+    if (this.userAnswer.length !== correctIds.length) {
+      return false;
+    }
+
+    return this.userAnswer.every(id => correctIds.includes(id));
+  }
+
+  private updateAnswerAndCorrectness(): void {
+    this.answerChange.emit(this.userAnswer);
+    const isCorrect = this.evaluateCorrectness();
+    this.correctnessChange.emit(isCorrect);
+  }
+
+  // Visual feedback methods for showAnswer mode
+  getHotSpotClass(hotSpot: any): string {
+    if (!this.showAnswer) return '';
+    
+    const isSelected = this.isSelected(hotSpot.id);
+    const isCorrect = hotSpot.correct;
+    
+    if (isSelected && isCorrect) {
+      return 'border-green-500 bg-green-100 text-green-800';
+    } else if (isSelected && !isCorrect) {
+      return 'border-red-500 bg-red-100 text-red-800';
+    } else if (!isSelected && isCorrect) {
+      return 'border-green-500 bg-green-50 text-green-600';
+    }
+    
+    return '';
+  }
+
+  shouldShowCorrectIndicator(hotSpot: any): boolean {
+    if (!this.showAnswer) return false;
+    return hotSpot.correct && !this.isSelected(hotSpot.id);
+  }
+
+  shouldShowIncorrectIndicator(hotSpot: any): boolean {
+    if (!this.showAnswer) return false;
+    return !hotSpot.correct && this.isSelected(hotSpot.id);
   }
 }
