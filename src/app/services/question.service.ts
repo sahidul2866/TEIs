@@ -53,15 +53,18 @@ export class QuestionService {
         id: 'q3',
         type: 'hotspot',
         title: 'Identify Cell Parts',
-        instruction: 'Click on the nucleus of the cell',
-        content: 'Look at the diagram of a plant cell and identify the nucleus.',
+        instruction: 'Click on the cell parts to identify them',
+        content: 'Look at the diagram of a plant cell and identify the different organelles.',
         points: 2,
         hotSpots: [
-          { id: 'nucleus', x: 150, y: 100, width: 40, height: 40, shape: 'circle', correct: true },
-          { id: 'chloroplast', x: 80, y: 80, width: 30, height: 30, shape: 'circle', correct: false },
-          { id: 'vacuole', x: 200, y: 150, width: 50, height: 50, shape: 'circle', correct: false }
+          { id: 'nucleus', x: 45, y: 45, width: 15, height: 15, shape: 'circle', correct: true },
+          { id: 'chloroplast1', x: 25, y: 30, width: 12, height: 8, shape: 'rectangle', correct: true },
+          { id: 'chloroplast2', x: 70, y: 25, width: 12, height: 8, shape: 'rectangle', correct: true },
+          { id: 'chloroplast3', x: 80, y: 50, width: 12, height: 8, shape: 'rectangle', correct: true },
+          { id: 'vacuole', x: 60, y: 60, width: 20, height: 20, shape: 'circle', correct: true },
+          { id: 'cell-wall', x: 10, y: 10, width: 85, height: 85, shape: 'rectangle', correct: true }
         ],
-        correctAnswer: ['nucleus']
+        correctAnswer: ['nucleus', 'chloroplast1', 'chloroplast2', 'chloroplast3', 'vacuole', 'cell-wall']
       },
       {
         id: 'q4',
