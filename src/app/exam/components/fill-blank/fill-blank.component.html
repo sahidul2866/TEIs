@@ -1,37 +1,31 @@
 <div class="fill-blank-container">
-  <div class="content-display text-lg leading-relaxed">
-    <span *ngFor="let part of contentParts; let i = index">
-      {{ part }}
-      <span *ngIf="i < blankPositions.length" class="inline-block mx-1">
-        <input 
-          type="text"
-          [(ngModel)]="userAnswer[blankPositions[i]]"
-          (ngModelChange)="onInputChange(blankPositions[i], $event)"
-          [placeholder]="getBlankPlaceholder(blankPositions[i])"
-          class="blank-input px-3 py-2 border-2 border-gray-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors">
-      </span>
-    </span>
-  </div>
-
-  <!-- Alternative view for complex blanks -->
-  <div *ngIf="contentParts.length <= 1" class="mt-6">
-    <p class="text-lg text-gray-800 mb-4">{{ question.content }}</p>
-    <div class="space-y-4">
-      <div *ngFor="let blank of question.blanks; let i = index" class="flex items-center space-x-4">
-        <label class="text-sm font-medium text-gray-700 w-20">Blank {{ i + 1 }}:</label>
-        <input 
-          type="text"
-          [(ngModel)]="userAnswer[i]"
-          (ngModelChange)="onInputChange(i, $event)"
-          [placeholder]="blank.placeholder"
-          class="blank-input flex-1 px-3 py-2 border-2 border-gray-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors">
-      </div>
-    </div>
+  <!-- Try It! Header -->
+  <div class="try-it-header">
+    <span class="location-pin">📍</span>
+    <span class="try-it-text">Try It!</span>
   </div>
 
   <!-- Instructions -->
-  <div class="instructions bg-yellow-50 p-4 rounded-lg mt-6">
-    <i class="fas fa-pen text-yellow-600 mr-2"></i>
-    <span class="text-yellow-800">Fill in the blanks with the most appropriate words or phrases.</span>
+  <div class="instructions">
+    <p>{{ question.instruction }}</p>
+  </div>
+
+  <!-- Content with blanks -->
+  <div class="content-section">
+    <div class="content-text">
+      <span *ngFor="let part of contentParts; let i = index">
+        {{ part }}
+        <span *ngIf="i < blankPositions.length" class="blank-wrapper">
+          <input 
+            type="text"
+            [(ngModel)]="userAnswer[blankPositions[i]]"
+            (ngModelChange)="onInputChange(blankPositions[i], $event)"
+            [placeholder]="getBlankPlaceholder(blankPositions[i])"
+            class="blank-input"
+            [attr.aria-label]="'Blank ' + (i + 1)"
+            [style.width]="getInputWidth(blankPositions[i])">
+        </span>
+      </span>
+    </div>
   </div>
 </div>

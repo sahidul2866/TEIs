@@ -21,7 +21,7 @@ export class DragDropComponent implements OnInit, OnDestroy {
   @Input() userAnswer: any = {};
   @Output() answerChange = new EventEmitter<any>();
 
-  private dragState: DragState = {
+  public dragState: DragState = {
     isDragging: false,
     draggedItem: null,
     draggedFromZone: null,

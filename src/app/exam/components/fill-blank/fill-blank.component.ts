@@ -47,4 +47,11 @@ export class FillBlankComponent implements OnInit {
   getBlankPlaceholder(index: number): string {
     return this.question.blanks?.[index]?.placeholder || 'Enter answer';
   }
+
+  getInputWidth(index: number): string {
+    // Calculate width based on placeholder text or a minimum width
+    const placeholder = this.getBlankPlaceholder(index);
+    const minWidth = Math.max(placeholder.length * 8, 100);
+    return `${minWidth}px`;
+  }
 }
